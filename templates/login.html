@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin Login · Question Answer</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <main class="page-shell">
+    <section class="app-card admin-card">
+      <a class="back-link" href="{{ url_for('index') }}">← Back to questions</a>
+      <header class="brand compact-brand">
+        <div class="brand-mark">Q</div>
+        <h1>Admin access</h1>
+        <p>Sign in to manage your question database.</p>
+      </header>
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}{% for category, message in messages %}
+          <div class="flash flash-{{ category }}">{{ message }}</div>
+        {% endfor %}{% endif %}
+      {% endwith %}
+      <form method="post" class="question-form">
+        <label for="password">Admin password</label>
+        <input id="password" name="password" type="password" placeholder="Enter admin password" required autocomplete="current-password">
+        <button type="submit">Sign in <span aria-hidden="true">→</span></button>
+      </form>
+      <p class="small-note">For security, set your admin password in the server environment. Do not put it in the source code.</p>
+    </section>
+  </main>
+</body>
+</html>

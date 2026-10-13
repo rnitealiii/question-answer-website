@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Manage Database · Question Answer</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <main class="admin-shell">
+    <header class="admin-topbar">
+      <a class="admin-brand" href="{{ url_for('index') }}"><span class="brand-mark small-mark">Q</span><span>Question Answer</span></a>
+      <div class="top-actions">
+        <a class="text-link" href="{{ url_for('index') }}">View website</a>
+        <form method="post" action="{{ url_for('admin_logout') }}"><button class="button-light" type="submit">Log out</button></form>
+      </div>
+    </header>
+
+    <section class="admin-intro">
+      <p class="eyebrow">ADMIN WORKSPACE</p>
+      <h1>Manage your database</h1>
+      <p>Upload your question bank or add entries manually.</p>
+    </section>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}{% for category, message in messages %}
+        <div class="flash flash-{{ category }}">{{ message }}</div>
+      {% endfor %}{% endif %}
+    {% endwith %}
+
+    <div class="admin-grid">
+      <section class="panel">
+        <div class="panel-heading"><div><h2>Upload database</h2><p>Import CSV or Excel (.xlsx)</p></div><span class="panel-icon">↑</span></div>
+        <form method="post" action="{{ url_for('admin_upload') }}" enctype="multipart/form-data" class="upload-form">
+          <label class="upload-zone" for="file">
+            <span class="upload-symbol">＋</span>
+            <strong>Choose a file</strong>
+            <span>CSV or XLSX · up to 10 MB</span>
+            <input id="file" type="file" name="file" accept=".csv,.xlsx" required>
+          </label>
+          <p class="small-note">Required columns: <b>Question</b> and <b>Answer</b>. <b>Explanation</b> is optional. Existing entries will not be deleted.</p>
+          <button type="submit">Upload and import</button>
+        </form>
+        <a class="download-link" href="{{ url_for('static', filename='sample_database.csv') }}">Download sample CSV template</a>
+      </section>
+
+      <section class="panel">
+        <div class="panel-heading"><div><h2>Add a question</h2><p>Enter one database entry manually</p></div><span class="panel-icon">＋</span></div>
+        <form method="post" action="{{ url_for('admin_add') }}" class="manual-form">
+          <label for="new-question">Question</label>
+          <textarea id="new-question" name="question" rows="2" required placeholder="Write the question"></textarea>
+          <label for="new-answer">Answer</label>
+          <textarea id="new-answer" name="answer" rows="2" required placeholder="Write the correct answer"></textarea>
+          <label for="new-explanation">Explanation (optional)</label>
+          <textarea id="new-explanation" name="explanation" rows="2" placeholder="Explain why this is correct"></textarea>
+          <button type="submit">Save question</button>
+        </form>
+      </section>
+    </div>
+
+    <section class="panel entries-panel">
+      <div class="panel-heading"><div><h2>Saved questions</h2><p>{{ count }} total entr{{ 'y' if count == 1 else 'ies' }}</p></div><span class="count-pill">{{ count }}</span></div>
+      {% if entries %}
+      <div class="entries-list">
+        {% for entry in entries %}
+        <article class="entry">
+          <div class="entry-copy">
+            <h3>{{ entry.question }}</h3>
+            <p><b>Answer:</b> {{ entry.answer }}</p>
+            {% if entry.explanation %}<p class="entry-explanation"><b>Explanation:</b> {{ entry.explanation }}</p>{% endif %}
+          </div>
+          <form method="post" action="{{ url_for('admin_delete', entry_id=entry.id) }}" onsubmit="return confirm('Delete this question?');">
+            <button class="delete-button" type="submit" aria-label="Delete question">Delete</button>
+          </form>
+        </article>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="empty-state"><span>◎</span><h3>Your database is empty</h3><p>Upload a file or add your first question above.</p></div>
+      {% endif %}
+      {% if count > 100 %}<p class="small-note">Showing the latest 100 entries.</p>{% endif %}
+    </section>
+    <p class="admin-footnote">Keep a backup of your original file. Uploaded entries are added to the database; duplicates are not automatically removed.</p>
+  </main>
+</body>
+</html>

@@ -114,6 +114,20 @@ button:disabled { opacity: .6; cursor: wait; }
   .top-actions { gap: 10px; flex-direction: column; align-items: flex-end; }
 }
 
+/* ---- Welcome / subscribe modal ---- */
+.modal-overlay{position:fixed;inset:0;background:rgba(15,23,42,.55);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;z-index:1000;padding:1rem}
+.modal-card{background:#fff;border-radius:1rem;max-width:26rem;width:100%;padding:1.75rem 1.5rem;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.25)}
+.modal-card h2{margin:0 0 .5rem;font-size:1.35rem}
+.modal-card p{margin:.4rem 0 1rem;color:#475569}
+.modal-card input{width:100%;padding:.7rem .9rem;border:1.5px solid #cbd5e1;border-radius:.6rem;font-size:1rem;margin-bottom:.9rem;box-sizing:border-box}
+.modal-card input:focus{outline:none;border-color:#2563eb}
+.modal-btn{display:inline-block;background:#2563eb;color:#fff;border:none;border-radius:.6rem;padding:.7rem 1.6rem;font-size:1rem;cursor:pointer}
+.modal-btn:hover{background:#1d4ed8}
+.modal-skip{display:block;margin-top:.7rem;color:#64748b;font-size:.85rem;cursor:pointer;background:none;border:none}
+.subscribe-btn{display:inline-flex;align-items:center;gap:.5rem;background:#ff0000;color:#fff;text-decoration:none;font-weight:700;border-radius:2rem;padding:.75rem 1.8rem;font-size:1.05rem;margin:.4rem 0 .8rem}
+.subscribe-btn:hover{background:#cc0000}
+.modal-thanks{color:#16a34a;font-weight:600;margin-top:.4rem}
+.modal-name{color:#2563eb;font-weight:700}
 </style>
 </head>
 <body>
@@ -206,6 +220,54 @@ form.addEventListener('submit',(event)=>{
   submitBtn.disabled=false;
   submitBtn.innerHTML='Find answer <span aria-hidden="true">&rarr;</span>';
 });
+</script>
+<div id="welcome-modal" class="modal-overlay" hidden>
+<div class="modal-card" id="modal-step-name">
+<h2>Welcome! 👋</h2>
+<p>Aapka naam kya hai?</p>
+<input id="visitor-name" type="text" placeholder="Apna naam likhein..." maxlength="40" autocomplete="name">
+<button class="modal-btn" id="name-continue">Continue &rarr;</button>
+<button class="modal-skip" id="name-skip">Skip</button>
+</div>
+<div class="modal-card" id="modal-step-sub" hidden>
+<h2>Assalam-o-Alaikum, <span class="modal-name" id="sub-name">Dost</span>! 🎉</h2>
+<p>Kindly hamara <strong>YouTube channel subscribe</strong> kar dein!</p>
+<a class="subscribe-btn" href="https://www.youtube.com/@ByteBazaar-1a" target="_blank" rel="noopener">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31.3 31.3 0 0 0 0 12a31.3 31.3 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31.3 31.3 0 0 0 24 12a31.3 31.3 0 0 0-.5-5.8zM9.6 15.6V8.4L15.8 12z"/></svg>
+Subscribe
+</a>
+<p class="modal-thanks">Thank you! ❤️</p>
+<button class="modal-skip" id="sub-close">Close</button>
+</div>
+</div>
+<script>
+(function(){
+  var overlay=document.getElementById('welcome-modal');
+  var stepName=document.getElementById('modal-step-name');
+  var stepSub=document.getElementById('modal-step-sub');
+  var nameInput=document.getElementById('visitor-name');
+  var saved=null;
+  try{saved=localStorage.getItem('qa_visitor_name');}catch(e){}
+  function showStep(which){
+    overlay.hidden=false;
+    stepName.hidden=(which!=='name');
+    stepSub.hidden=(which!=='sub');
+  }
+  function greet(name){
+    document.getElementById('sub-name').textContent=name||'Dost';
+    showStep('sub');
+  }
+  document.getElementById('name-continue').addEventListener('click',function(){
+    var n=nameInput.value.trim();
+    if(n){try{localStorage.setItem('qa_visitor_name',n);}catch(e){}}
+    greet(n||'Dost');
+  });
+  nameInput.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();document.getElementById('name-continue').click();}});
+  document.getElementById('name-skip').addEventListener('click',function(){greet(saved||'Dost');});
+  document.getElementById('sub-close').addEventListener('click',function(){overlay.hidden=true;});
+  overlay.addEventListener('click',function(e){if(e.target===overlay)overlay.hidden=true;});
+  if(saved){greet(saved);}else{showStep('name');if(nameInput)setTimeout(function(){nameInput.focus();},300);}
+})();
 </script>
 </body>
 </html>

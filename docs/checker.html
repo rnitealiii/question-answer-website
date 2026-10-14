@@ -135,6 +135,10 @@ button:disabled { opacity: .6; cursor: wait; }
 .site-footer{background:#0f172a;color:#94a3b8;text-align:center;padding:.9rem 1rem;font-size:.85rem}
 .site-footer a{color:#e2e8f0;text-decoration:none;margin-left:.75rem}
 .site-footer a:hover{text-decoration:underline}
+.site-nav{margin-top:.55rem}
+.site-nav a{color:#cbd5e1;text-decoration:none;margin:0 .8rem;font-size:.92rem;font-weight:600}
+.site-nav a:hover{color:#fff}
+.site-nav a.active{color:#fff;border-bottom:2px solid #38bdf8;padding-bottom:.15rem}
 
 /* ---- Text Checker page ---- */
 .site-nav{margin-top:.55rem}
@@ -170,21 +174,22 @@ button:disabled { opacity: .6; cursor: wait; }
 .rules-note{margin-top:1.4rem;font-size:.82rem;color:var(--muted);background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:.9rem 1.1rem}
 .rules-note summary{cursor:pointer;font-weight:700;color:#363940}
 .rules-note li{margin:.25rem 0}
+.free-badge{background:#16a34a;color:#fff;font-size:.62rem;font-weight:800;border-radius:4px;padding:.12rem .35rem;margin-left:.25rem;vertical-align:middle;letter-spacing:.4px}
 </style>
 </head>
 <body>
 <header class="site-header">
 <p class="brand-name">ByteBazaar</p>
 <p class="brand-tag">GoTranscript Tools</p>
-<nav class="site-nav"><a href="index.html">Q&amp;A</a><a href="checker.html" class="active">Text Checker</a></nav>
+<nav class="site-nav"><a href="index.html">Q&amp;A</a><a href="checker.html" class="active">Text Checker</a><a href="audio-compare.html">Audio Compare <span class="free-badge">FREE</span></a></nav>
 </header>
-<div class="soon-banner">🎙️ <strong>Coming soon:</strong> Audio + Transcript AI Compare &mdash; upload your audio and get an AI-powered accuracy check. <strong>100% FREE.</strong></div>
+<div class="soon-banner">🎙️ <strong>NEW:</strong> <a href="audio-compare.html" style="color:#713f12;font-weight:700">Audio + Transcript AI Compare</a> &mdash; upload your audio and get an AI-powered accuracy check. <strong>100% FREE.</strong></div>
 <main class="page-shell checker-shell">
 <section class="app-card checker-card">
 <div class="brand"><span class="brand-mark">&#10003;</span><h1>GoTranscript Text Checker</h1>
 <p>Paste your transcript below. Strict guideline checks for <strong>English</strong> and <strong>Hindi</strong>.</p></div>
 <div class="controls">
-<label>Language<select id="lang"><option value="en">English</option><option value="hi">Hindi</option></select></label>
+<label>Language<select id="lang"></select></label>
 <label>Verbatim type<select id="verbatim"><option value="clean">Clean verbatim</option><option value="full">Full verbatim</option></select></label>
 </div>
 <label for="tinput">Your transcript</label>
@@ -267,10 +272,16 @@ Subscribe
 })();
 </script>
 <script src="checker.js"></script>
+<script src="lang-en.js"></script>
+<script src="lang-hi.js"></script>
 <script>
 (function(){
   var tinput = document.getElementById('tinput');
   var langSel = document.getElementById('lang');
+  GoTranscriptChecker.languages().forEach(function(l){
+    var o = document.createElement('option'); o.value = l.code; o.textContent = l.name;
+    langSel.appendChild(o);
+  });
   var verbSel = document.getElementById('verbatim');
   var results = document.getElementById('results');
   var SAMPLE = "Speaker 1 Hey Maya, I'd like to ask you something!\nSpeaker 2: Yeah, I'm gonna go now...\nSpeaker 1:  I have 5 apples.\nHe said: \"Don't bother telling me.\",\nI went to the U.S.A. last year. It is 2:45 pm.\nOk, etc. [LAUGHTER] [inaudible]\num, you know, I wanted to say--\nAnd then we left.";

@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Text Checker - ByteBazaar GoTranscript Tools</title>
+<style>
+:root {
+  --ink: #18191b;
+  --muted: #777b83;
+  --line: #e7e8eb;
+  --surface: #ffffff;
+  --page: #f6f7f8;
+  --soft: #f8f9fa;
+  --accent: #1b1c1f;
+  --success: #176b45;
+  --success-bg: #eaf7ef;
+  --error: #a33a32;
+  --error-bg: #fff0ee;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--page); color: var(--ink); font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+button, input, textarea { font: inherit; }
+button { cursor: pointer; }
+.page-shell { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 28px 16px; }
+.app-card { width: 100%; max-width: 470px; background: var(--surface); border: 1px solid var(--line); border-radius: 24px; padding: 32px; box-shadow: 0 12px 40px rgba(20, 24, 30, .045); }
+.brand { text-align: center; margin: 0 0 28px; }
+.brand-mark { display: inline-flex; align-items: center; justify-content: center; width: 42px; height: 42px; border-radius: 14px; color: white; background: var(--ink); font-size: 20px; font-weight: 750; margin-bottom: 15px; }
+.brand h1 { margin: 0; font-size: 25px; letter-spacing: -.8px; }
+.brand p { margin: 9px 0 0; color: var(--muted); font-size: 14px; }
+.question-form { display: flex; flex-direction: column; gap: 10px; }
+label { font-size: 13px; font-weight: 650; color: #363940; }
+textarea, input[type="password"] { width: 100%; border: 1px solid #dedfe3; border-radius: 12px; padding: 13px 14px; background: #fff; color: var(--ink); outline: none; resize: vertical; transition: border-color .15s, box-shadow .15s; }
+textarea:focus, input:focus { border-color: #8e929a; box-shadow: 0 0 0 3px rgba(50, 55, 65, .07); }
+textarea::placeholder, input::placeholder { color: #a0a3aa; }
+button[type="submit"], .upload-form > button, .manual-form > button { border: 0; background: var(--accent); color: white; border-radius: 12px; min-height: 46px; padding: 12px 16px; font-weight: 650; transition: opacity .15s, transform .15s; }
+button[type="submit"]:hover, .upload-form > button:hover, .manual-form > button:hover { opacity: .88; }
+button:disabled { opacity: .6; cursor: wait; }
+#submit-btn { display: flex; justify-content: center; align-items: center; gap: 8px; margin-top: 3px; }
+.status { margin-top: 15px; padding: 10px 12px; border-radius: 10px; font-size: 12px; }
+.status-match { color: var(--success); background: var(--success-bg); }
+.status-not-found { color: var(--error); background: var(--error-bg); }
+.result-card { margin-top: 16px; padding: 17px 18px; background: var(--soft); border: 1px solid var(--line); border-radius: 14px; }
+.explanation-card { background: #fff; }
+.result-heading { display: flex; align-items: center; gap: 8px; }
+.result-heading h2 { font-size: 12px; text-transform: uppercase; letter-spacing: .8px; margin: 0; color: #656972; }
+.dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
+.answer-dot { background: #2d8a60; }
+.explanation-dot { background: #9a83dc; }
+.result-text { margin: 11px 0 0; font-size: 14px; line-height: 1.65; white-space: pre-wrap; overflow-wrap: anywhere; }
+.footer { margin-top: 28px; padding-top: 17px; border-top: 1px solid #f0f0f2; display: flex; align-items: center; justify-content: space-between; color: #9a9da4; font-size: 11px; }
+.footer a, .text-link, .download-link, .back-link { color: #60636b; text-decoration: none; }
+.footer a:hover, .text-link:hover, .download-link:hover, .back-link:hover { color: #111; text-decoration: underline; }
+[hidden] { display: none !important; }
+.admin-card { max-width: 430px; }
+.back-link { font-size: 13px; display: inline-block; margin-bottom: 22px; }
+.compact-brand { margin-bottom: 24px; }
+.small-note { color: var(--muted); font-size: 12px; line-height: 1.6; margin: 12px 0 0; }
+.flash { padding: 12px 14px; border-radius: 11px; font-size: 13px; line-height: 1.5; margin: 12px 0 18px; }
+.flash-success { background: var(--success-bg); color: var(--success); }
+.flash-error { background: var(--error-bg); color: var(--error); }
+.admin-shell { max-width: 1080px; margin: 0 auto; padding: 26px 22px 40px; }
+.admin-topbar { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding-bottom: 23px; border-bottom: 1px solid var(--line); }
+.admin-brand { display: inline-flex; align-items: center; gap: 10px; color: var(--ink); text-decoration: none; font-weight: 750; letter-spacing: -.3px; }
+.small-mark { width: 32px; height: 32px; border-radius: 10px; font-size: 16px; margin: 0; }
+.top-actions { display: flex; align-items: center; gap: 18px; }
+.top-actions form { margin: 0; }
+.text-link { font-size: 13px; }
+.button-light { border: 1px solid var(--line); background: white; padding: 9px 13px; border-radius: 10px; color: #41444b; font-size: 12px; }
+.admin-intro { padding: 30px 0 18px; }
+.eyebrow { color: #888c95; letter-spacing: 1.5px; font-size: 10px; font-weight: 750; margin: 0 0 9px; }
+.admin-intro h1 { margin: 0; font-size: clamp(25px, 4vw, 34px); letter-spacing: -1.1px; }
+.admin-intro > p:last-child { color: var(--muted); font-size: 14px; margin: 9px 0 0; }
+.admin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
+.panel { background: white; border: 1px solid var(--line); border-radius: 18px; padding: 22px; margin-top: 14px; min-width: 0; }
+.admin-grid .panel { margin-top: 0; }
+.panel-heading { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 19px; }
+.panel-heading h2 { margin: 0; font-size: 16px; letter-spacing: -.3px; }
+.panel-heading p { margin: 6px 0 0; color: var(--muted); font-size: 12px; }
+.panel-icon { width: 32px; height: 32px; display: grid; place-items: center; border-radius: 10px; background: #f3f4f5; color: #4c5058; font-size: 18px; }
+.upload-form, .manual-form { display: flex; flex-direction: column; gap: 10px; }
+.upload-zone { min-height: 155px; border: 1px dashed #cfd1d6; border-radius: 13px; background: #fafbfb; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 7px; text-align: center; cursor: pointer; padding: 16px; }
+.upload-symbol { width: 30px; height: 30px; display: grid; place-items: center; background: white; border: 1px solid var(--line); border-radius: 9px; font-size: 18px; }
+.upload-zone strong { font-size: 13px; }
+.upload-zone span:last-of-type { color: var(--muted); font-size: 11px; font-weight: 400; }
+.upload-zone input { max-width: 220px; font-size: 11px; margin-top: 4px; }
+.upload-form .small-note { margin: 2px 0 5px; }
+.download-link { display: inline-block; margin-top: 14px; font-size: 12px; }
+.manual-form label:not(:first-child) { margin-top: 3px; }
+.manual-form textarea { min-height: 65px; }
+.count-pill { background: #f1f2f4; border-radius: 999px; padding: 6px 10px; font-size: 12px; font-weight: 700; }
+.entries-panel { margin-top: 18px; }
+.entries-list { border-top: 1px solid #f0f0f2; }
+.entry { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; padding: 17px 0; border-bottom: 1px solid #f0f0f2; }
+.entry:last-child { border-bottom: 0; }
+.entry-copy { min-width: 0; }
+.entry h3 { margin: 0 0 8px; font-size: 14px; line-height: 1.5; overflow-wrap: anywhere; }
+.entry p { margin: 5px 0 0; font-size: 12px; line-height: 1.6; color: #656972; overflow-wrap: anywhere; }
+.entry-explanation { color: #888b92 !important; }
+.delete-button { border: 1px solid #f0d4d1; background: white; color: #a33a32; border-radius: 9px; padding: 7px 9px; font-size: 11px; }
+.empty-state { text-align: center; padding: 30px 12px 24px; color: var(--muted); }
+.empty-state span { font-size: 25px; }
+.empty-state h3 { color: var(--ink); font-size: 14px; margin: 10px 0 5px; }
+.empty-state p { font-size: 12px; margin: 0; }
+.admin-footnote { text-align: center; font-size: 11px; line-height: 1.6; color: #92959d; margin: 20px 0 0; }
+@media (max-width: 720px) {
+  .admin-grid { grid-template-columns: 1fr; }
+  .admin-shell { padding: 18px 14px 28px; }
+  .panel { padding: 18px; }
+}
+@media (max-width: 420px) {
+  .app-card { padding: 24px 20px; border-radius: 19px; }
+  .admin-topbar { align-items: flex-start; }
+  .top-actions { gap: 10px; flex-direction: column; align-items: flex-end; }
+}
+
+/* ---- Welcome / subscribe modal ---- */
+.modal-overlay{position:fixed;inset:0;background:rgba(15,23,42,.55);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;z-index:1000;padding:1rem}
+.modal-card{background:#fff;border-radius:1rem;max-width:26rem;width:100%;padding:1.75rem 1.5rem;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.25)}
+.modal-card h2{margin:0 0 .5rem;font-size:1.35rem}
+.modal-card p{margin:.4rem 0 1rem;color:#475569}
+.modal-card input{width:100%;padding:.7rem .9rem;border:1.5px solid #cbd5e1;border-radius:.6rem;font-size:1rem;margin-bottom:.9rem;box-sizing:border-box}
+.modal-card input:focus{outline:none;border-color:#2563eb}
+.modal-btn{display:inline-block;background:#2563eb;color:#fff;border:none;border-radius:.6rem;padding:.7rem 1.6rem;font-size:1rem;cursor:pointer}
+.modal-btn:hover{background:#1d4ed8}
+.modal-skip{display:block;margin-top:.7rem;color:#64748b;font-size:.85rem;cursor:pointer;background:none;border:none}
+.subscribe-btn{display:inline-flex;align-items:center;gap:.5rem;background:#ff0000;color:#fff;text-decoration:none;font-weight:700;border-radius:2rem;padding:.75rem 1.8rem;font-size:1.05rem;margin:.4rem 0 .8rem}
+.subscribe-btn:hover{background:#cc0000}
+.modal-thanks{color:#16a34a;font-weight:600;margin-top:.4rem}
+.modal-name{color:#2563eb;font-weight:700}
+/* ---- Simple site header & footer ---- */
+.site-header{background:#1e293b;color:#fff;padding:.85rem 1.25rem;text-align:center}
+.site-header .brand-name{font-size:1.35rem;font-weight:800;letter-spacing:.5px;margin:0}
+.site-header .brand-tag{font-size:.8rem;color:#94a3b8;margin:.15rem 0 0}
+.site-footer{background:#0f172a;color:#94a3b8;text-align:center;padding:.9rem 1rem;font-size:.85rem}
+.site-footer a{color:#e2e8f0;text-decoration:none;margin-left:.75rem}
+.site-footer a:hover{text-decoration:underline}
+
+/* ---- Text Checker page ---- */
+.site-nav{margin-top:.55rem}
+.site-nav a{color:#cbd5e1;text-decoration:none;margin:0 .8rem;font-size:.92rem;font-weight:600}
+.site-nav a:hover{color:#fff}
+.site-nav a.active{color:#fff;border-bottom:2px solid #38bdf8;padding-bottom:.15rem}
+.soon-banner{background:#fef9c3;border-bottom:1px solid #fde68a;color:#713f12;text-align:center;padding:.65rem 1rem;font-size:.9rem}
+.checker-shell{align-items:flex-start !important}
+.checker-card{max-width:46rem !important;text-align:left}
+.checker-card .brand{text-align:center}
+.controls{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-bottom:1rem}
+.controls select{width:100%;border:1px solid #dedfe3;border-radius:12px;padding:11px 12px;background:#fff;margin-top:.3rem}
+#tinput{min-height:11rem;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85rem}
+.btn-row{display:flex;gap:.6rem;margin-top:.9rem;flex-wrap:wrap}
+.btn-row button{border:0;background:var(--accent);color:#fff;border-radius:12px;min-height:46px;padding:12px 22px;font-weight:650}
+.btn-row button:hover{opacity:.88}
+.ghost-btn{background:#eef0f3 !important;color:#1b1c1f !important}
+#results{margin-top:1.4rem}
+.score-wrap{display:flex;align-items:center;gap:1rem;background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:1rem 1.2rem;margin-bottom:1rem}
+.score-num{font-size:2.4rem;font-weight:800;min-width:4.2rem;text-align:center;border-radius:12px;padding:.2rem .4rem}
+.score-good{color:#176b45;background:#eaf7ef}
+.score-mid{color:#92600a;background:#fef6e0}
+.score-bad{color:#a33a32;background:#fff0ee}
+.score-label{font-weight:700;font-size:1.05rem}
+.score-sub{color:var(--muted);font-size:.85rem}
+.issue{border:1px solid var(--line);border-radius:10px;padding:.7rem .9rem;margin-bottom:.55rem;font-size:.88rem}
+.issue .sev{display:inline-block;font-size:.68rem;font-weight:800;letter-spacing:.5px;border-radius:6px;padding:.15rem .5rem;margin-right:.5rem;text-transform:uppercase}
+.sev-error{background:#fee2e2;color:#991b1b}
+.sev-warning{background:#fef3c7;color:#92400e}
+.issue .ln{color:var(--muted);font-size:.78rem;margin-left:.4rem}
+.issue .rule{font-weight:700}
+.issue .fix{display:block;color:var(--muted);margin-top:.25rem}
+.rules-note{margin-top:1.4rem;font-size:.82rem;color:var(--muted);background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:.9rem 1.1rem}
+.rules-note summary{cursor:pointer;font-weight:700;color:#363940}
+.rules-note li{margin:.25rem 0}
+</style>
+</head>
+<body>
+<header class="site-header">
+<p class="brand-name">ByteBazaar</p>
+<p class="brand-tag">GoTranscript Tools</p>
+<nav class="site-nav"><a href="index.html">Q&amp;A</a><a href="checker.html" class="active">Text Checker</a></nav>
+</header>
+<div class="soon-banner">🎙️ <strong>Coming soon:</strong> Audio + Transcript AI Compare &mdash; upload your audio and get an AI-powered accuracy check. <strong>100% FREE.</strong></div>
+<main class="page-shell checker-shell">
+<section class="app-card checker-card">
+<div class="brand"><span class="brand-mark">&#10003;</span><h1>GoTranscript Text Checker</h1>
+<p>Paste your transcript below. Strict guideline checks for <strong>English</strong> and <strong>Hindi</strong>.</p></div>
+<div class="controls">
+<label>Language<select id="lang"><option value="en">English</option><option value="hi">Hindi</option></select></label>
+<label>Verbatim type<select id="verbatim"><option value="clean">Clean verbatim</option><option value="full">Full verbatim</option></select></label>
+</div>
+<label for="tinput">Your transcript</label>
+<textarea id="tinput" placeholder="Paste your transcript here..."></textarea>
+<div class="btn-row">
+<button type="button" id="checkBtn">Check My Text</button>
+<button type="button" id="sampleBtn" class="ghost-btn">Load sample</button>
+<button type="button" id="clearBtn" class="ghost-btn">Clear</button>
+</div>
+<div id="results" hidden>
+<div class="score-wrap"><div class="score-num" id="scoreNum">0</div>
+<div><div class="score-label" id="scoreLabel"></div><div class="score-sub" id="scoreSub"></div></div></div>
+<div id="issueList"></div>
+</div>
+<details class="rules-note"><summary>What does the checker verify? (strict rules)</summary>
+<ul>
+<li>Speaker labels end with a colon (<em>Speaker 1:</em>), single space after it, no Tab key.</li>
+<li>Timestamps in <em>[HH:MM:SS]</em> format, in chronological order.</li>
+<li>Only <em>[inaudible 00:00:00]</em> and <em>[unintelligible 00:00:00]</em> markings &mdash; nothing invented.</li>
+<li>Sound notes in [brackets], lower case, max two words.</li>
+<li>No exclamation marks, no [sic], no (parentheses).</li>
+<li>Clean verbatim: no slang (<em>gonna</em> &rarr; <em>going to</em>), <em>yeah</em> &rarr; <em>yes</em>, <em>OK</em> &rarr; <em>Okay</em>, fillers flagged.</li>
+<li>Single-digit numbers spelled out (<em>five</em> not <em>5</em>), with money/percent/measure exceptions.</li>
+<li>Acronyms without periods (<em>USA</em>, <em>PhD</em>), commas/periods inside quotes, AM/PM capitalized.</li>
+<li>Every sentence capitalized and properly punctuated.</li>
+<li>Hindi: English words in Devanagari script, numbers spelled out in Hindi.</li>
+</ul>
+<p><strong>Note:</strong> this checks formatting &amp; style against the guidelines. It cannot verify that the words match the audio.</p>
+</details>
+</section>
+</main>
+<footer class="site-footer">
+<span>&copy; 2026 ByteBazaar</span>
+<a href="https://www.youtube.com/@ByteBazaar-1a" target="_blank" rel="noopener">YouTube Channel</a>
+</footer>
+<div id="welcome-modal" class="modal-overlay" hidden>
+<div class="modal-card" id="modal-step-name">
+<h2>Welcome! 👋</h2>
+<p>What is your name?</p>
+<input id="visitor-name" type="text" placeholder="Enter your name..." maxlength="40" autocomplete="name">
+<button class="modal-btn" id="name-continue">Continue &rarr;</button>
+</div>
+<div class="modal-card" id="modal-step-sub" hidden>
+<h2>Hello, <span class="modal-name" id="sub-name">Friend</span>! 🎉</h2>
+<p>Kindly <strong>subscribe to our YouTube channel</strong>!</p>
+<a class="subscribe-btn" href="https://www.youtube.com/@ByteBazaar-1a" target="_blank" rel="noopener">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31.3 31.3 0 0 0 0 12a31.3 31.3 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31.3 31.3 0 0 0 24 12a31.3 31.3 0 0 0-.5-5.8zM9.6 15.6V8.4L15.8 12z"/></svg>
+Subscribe
+</a>
+<p class="modal-thanks">Thank you! ❤️</p>
+<button class="modal-skip" id="sub-close">Close</button>
+</div>
+</div>
+<script>
+(function(){
+  var overlay=document.getElementById('welcome-modal');
+  var stepName=document.getElementById('modal-step-name');
+  var stepSub=document.getElementById('modal-step-sub');
+  var nameInput=document.getElementById('visitor-name');
+  var saved=null;
+  try{saved=localStorage.getItem('qa_visitor_name');}catch(e){}
+  function showStep(which){
+    overlay.hidden=false;
+    stepName.hidden=(which!=='name');
+    stepSub.hidden=(which!=='sub');
+  }
+  function greet(name){
+    document.getElementById('sub-name').textContent=name||'Friend';
+    showStep('sub');
+  }
+  document.getElementById('name-continue').addEventListener('click',function(){
+    var n=nameInput.value.trim();
+    if(n){try{localStorage.setItem('qa_visitor_name',n);}catch(e){}}
+    greet(n||'Friend');
+  });
+  nameInput.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();document.getElementById('name-continue').click();}});
+  document.getElementById('sub-close').addEventListener('click',function(){overlay.hidden=true;});
+  overlay.addEventListener('click',function(e){if(e.target===overlay)overlay.hidden=true;});
+  if(saved){greet(saved);}else{showStep('name');if(nameInput)setTimeout(function(){nameInput.focus();},300);}
+})();
+</script>
+<script src="checker.js"></script>
+<script>
+(function(){
+  var tinput = document.getElementById('tinput');
+  var langSel = document.getElementById('lang');
+  var verbSel = document.getElementById('verbatim');
+  var results = document.getElementById('results');
+  var SAMPLE = "Speaker 1 Hey Maya, I'd like to ask you something!\nSpeaker 2: Yeah, I'm gonna go now...\nSpeaker 1:  I have 5 apples.\nHe said: \"Don't bother telling me.\",\nI went to the U.S.A. last year. It is 2:45 pm.\nOk, etc. [LAUGHTER] [inaudible]\num, you know, I wanted to say--\nAnd then we left.";
+  document.getElementById('sampleBtn').addEventListener('click', function(){ tinput.value = SAMPLE; });
+  document.getElementById('clearBtn').addEventListener('click', function(){ tinput.value=''; results.hidden = true; tinput.focus(); });
+  document.getElementById('checkBtn').addEventListener('click', function(){
+    var text = tinput.value;
+    if (!text.trim()){ tinput.focus(); return; }
+    var res = GoTranscriptChecker.check(text, {lang: langSel.value, verbatim: verbSel.value});
+    var scoreNum = document.getElementById('scoreNum');
+    scoreNum.textContent = res.score;
+    scoreNum.className = 'score-num ' + (res.score >= 90 ? 'score-good' : res.score >= 60 ? 'score-mid' : 'score-bad');
+    var label = res.score >= 90 ? 'Excellent' : res.score >= 75 ? 'Good' : res.score >= 60 ? 'Needs work' : 'Poor';
+    document.getElementById('scoreLabel').textContent = label;
+    document.getElementById('scoreSub').textContent = res.errorCount + ' error(s), ' + res.warningCount + ' warning(s) found.';
+    var list = document.getElementById('issueList');
+    list.innerHTML = '';
+    if (!res.issues.length){
+      list.innerHTML = '<div class="issue"><span class="sev sev-error" style="background:#dcfce7;color:#166534">PASS</span><span class="rule">No issues found.</span><span class="fix">Your text follows the strict guidelines. Well done!</span></div>';
+    } else {
+      res.issues.forEach(function(it){
+        var d = document.createElement('div');
+        d.className = 'issue';
+        var sev = document.createElement('span');
+        sev.className = 'sev sev-' + it.sev;
+        sev.textContent = it.sev;
+        var rule = document.createElement('span');
+        rule.className = 'rule';
+        rule.textContent = it.rule;
+        var ln = document.createElement('span');
+        ln.className = 'ln';
+        ln.textContent = 'Line ' + it.line;
+        d.appendChild(sev); d.appendChild(rule); d.appendChild(ln);
+        var msg = document.createElement('div');
+        msg.textContent = it.msg;
+        d.appendChild(msg);
+        if (it.fix){
+          var fix = document.createElement('span');
+          fix.className = 'fix';
+          fix.textContent = 'Fix: ' + it.fix;
+          d.appendChild(fix);
+        }
+        list.appendChild(d);
+      });
+    }
+    results.hidden = false;
+    results.scrollIntoView({behavior:'smooth', block:'start'});
+  });
+})();
+</script>
+</body>
+</html>

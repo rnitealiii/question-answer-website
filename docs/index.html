@@ -139,13 +139,16 @@ button:disabled { opacity: .6; cursor: wait; }
 .site-nav a{color:#cbd5e1;text-decoration:none;margin:0 .8rem;font-size:.92rem;font-weight:600}
 .site-nav a:hover{color:#fff}
 .site-nav a.active{color:#fff;border-bottom:2px solid #38bdf8;padding-bottom:.15rem}
+.site-nav a.disabled{color:#64748b;pointer-events:none;cursor:not-allowed;opacity:.75}
+.site-nav a.disabled:hover{color:#64748b}
+.soon-badge{background:#f59e0b;color:#fff;font-size:.62rem;font-weight:800;border-radius:4px;padding:.12rem .35rem;margin-left:.25rem;vertical-align:middle;letter-spacing:.4px}
 </style>
 </head>
 <body>
 <header class="site-header">
 <p class="brand-name">ByteBazaar</p>
 <p class="brand-tag">GoTranscript Questions &amp; Answers</p>
-<nav class="site-nav"><a href="index.html" class="active">Q&amp;A</a><a href="checker.html">Text Checker</a><a href="audio-compare.html">Audio Compare <span class="free-badge">FREE</span></a></nav>
+<nav class="site-nav"><a href="index.html" class="active">Q&amp;A</a><a class="disabled" title="Coming soon">Text Checker <span class="soon-badge">SOON</span></a><a class="disabled" title="Coming soon">Audio Compare <span class="soon-badge">SOON</span></a></nav>
 </header>
 <main class="page-shell">
 <section class="app-card">

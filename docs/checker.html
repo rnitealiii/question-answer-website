@@ -139,12 +139,18 @@ button:disabled { opacity: .6; cursor: wait; }
 .site-nav a{color:#cbd5e1;text-decoration:none;margin:0 .8rem;font-size:.92rem;font-weight:600}
 .site-nav a:hover{color:#fff}
 .site-nav a.active{color:#fff;border-bottom:2px solid #38bdf8;padding-bottom:.15rem}
+.site-nav a.disabled{color:#64748b;pointer-events:none;cursor:not-allowed;opacity:.75}
+.site-nav a.disabled:hover{color:#64748b}
+.soon-badge{background:#f59e0b;color:#fff;font-size:.62rem;font-weight:800;border-radius:4px;padding:.12rem .35rem;margin-left:.25rem;vertical-align:middle;letter-spacing:.4px}
 
 /* ---- Text Checker page ---- */
 .site-nav{margin-top:.55rem}
 .site-nav a{color:#cbd5e1;text-decoration:none;margin:0 .8rem;font-size:.92rem;font-weight:600}
 .site-nav a:hover{color:#fff}
 .site-nav a.active{color:#fff;border-bottom:2px solid #38bdf8;padding-bottom:.15rem}
+.site-nav a.disabled{color:#64748b;pointer-events:none;cursor:not-allowed;opacity:.75}
+.site-nav a.disabled:hover{color:#64748b}
+.soon-badge{background:#f59e0b;color:#fff;font-size:.62rem;font-weight:800;border-radius:4px;padding:.12rem .35rem;margin-left:.25rem;vertical-align:middle;letter-spacing:.4px}
 .soon-banner{background:#fef9c3;border-bottom:1px solid #fde68a;color:#713f12;text-align:center;padding:.65rem 1rem;font-size:.9rem}
 .checker-shell{align-items:flex-start !important}
 .checker-card{max-width:46rem !important;text-align:left}
@@ -181,9 +187,9 @@ button:disabled { opacity: .6; cursor: wait; }
 <header class="site-header">
 <p class="brand-name">ByteBazaar</p>
 <p class="brand-tag">GoTranscript Tools</p>
-<nav class="site-nav"><a href="index.html">Q&amp;A</a><a href="checker.html" class="active">Text Checker</a><a href="audio-compare.html">Audio Compare <span class="free-badge">FREE</span></a></nav>
+<nav class="site-nav"><a href="index.html">Q&amp;A</a><a href="checker.html" class="active">Text Checker</a><a class="disabled" title="Coming soon">Audio Compare <span class="soon-badge">SOON</span></a></nav>
 </header>
-<div class="soon-banner">🎙️ <strong>NEW:</strong> <a href="audio-compare.html" style="color:#713f12;font-weight:700">Audio + Transcript AI Compare</a> &mdash; upload your audio and get an AI-powered accuracy check. <strong>100% FREE.</strong></div>
+<div class="soon-banner">🎙️ <strong>Coming soon:</strong> Audio + Transcript AI Compare &mdash; upload your audio and get an AI-powered accuracy check. <strong>100% FREE.</strong></div>
 <main class="page-shell checker-shell">
 <section class="app-card checker-card">
 <div class="brand"><span class="brand-mark">&#10003;</span><h1>GoTranscript Text Checker</h1>

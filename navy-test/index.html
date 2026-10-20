@@ -1,0 +1,655 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="data:," />
+    <title>Pak Navy Civilian Apprenticeship — Test Preparation</title>
+    <style>
+      :root {
+        --navy: #0a2a5e;
+        --navy-deep: #071e45;
+        --accent: #1f6fd0;
+        --bg: #eef2f7;
+        --card: #ffffff;
+        --ink: #14213a;
+        --muted: #5a6b85;
+        --line: #d5dde8;
+        --good: #177245;
+        --good-bg: #e3f4ea;
+        --bad: #b3261e;
+        --bad-bg: #fbe9e7;
+        --warn: #b3261e;
+        --selected: #e8f1fd;
+        --chip: #dde8f7;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --navy: #123a7d;
+          --navy-deep: #0b2449;
+          --accent: #5b9bf0;
+          --bg: #0b1220;
+          --card: #16223a;
+          --ink: #e8eef7;
+          --muted: #9db0c9;
+          --line: #2c3d5c;
+          --good: #5fd69a;
+          --good-bg: #123527;
+          --bad: #ff8a80;
+          --bad-bg: #3d1a17;
+          --warn: #ff8a80;
+          --selected: #1d3560;
+          --chip: #22355a;
+        }
+      }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; padding: 0; }
+      body {
+        font-family: "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif;
+        background: var(--bg);
+        color: var(--ink);
+        line-height: 1.5;
+        -webkit-tap-highlight-color: transparent;
+      }
+      .wrap { max-width: 760px; margin: 0 auto; padding: 20px 16px 48px; }
+
+      /* ---------- Home ---------- */
+      .hero {
+        background: linear-gradient(160deg, var(--navy) 0%, var(--navy-deep) 100%);
+        color: #fff;
+        border-radius: 14px;
+        padding: 26px 22px 22px;
+        margin-bottom: 18px;
+      }
+      .hero h1 { font-size: 1.55rem; line-height: 1.25; margin: 0 0 8px; font-weight: 700; }
+      .hero p { margin: 0; color: #c9daf5; font-size: 0.98rem; }
+      .hero .anchor { font-size: 1.9rem; display: block; margin-bottom: 10px; }
+      .pattern-note {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 14px 16px;
+        font-size: 0.95rem;
+        color: var(--muted);
+        margin-bottom: 18px;
+      }
+      .pattern-note strong { color: var(--ink); }
+      .test-card {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 20px;
+        margin-bottom: 14px;
+      }
+      .test-card h2 { margin: 0 0 6px; font-size: 1.2rem; color: var(--navy); }
+      @media (prefers-color-scheme: dark) { .test-card h2 { color: var(--accent); } }
+      .test-card p { margin: 0 0 14px; color: var(--muted); font-size: 0.95rem; }
+      .meta { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+      .meta span {
+        background: var(--chip);
+        color: var(--ink);
+        border-radius: 999px;
+        padding: 4px 12px;
+        font-size: 0.85rem;
+        font-weight: 600;
+      }
+      button {
+        font: inherit;
+        cursor: pointer;
+        border: none;
+        border-radius: 10px;
+        font-weight: 600;
+      }
+      .btn-start {
+        background: var(--navy);
+        color: #fff;
+        padding: 13px 22px;
+        font-size: 1rem;
+        width: 100%;
+      }
+      .btn-start:active { background: var(--navy-deep); }
+      .tips {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 16px 18px;
+        margin-top: 20px;
+        font-size: 0.95rem;
+      }
+      .tips h3 { margin: 0 0 8px; font-size: 1rem; }
+      .tips ul { margin: 0; padding-left: 20px; color: var(--muted); }
+      .tips li { margin-bottom: 4px; }
+
+      /* ---------- Test screen ---------- */
+      .test-top {
+        position: sticky;
+        top: 0;
+        background: var(--bg);
+        padding: 10px 0 12px;
+        z-index: 5;
+      }
+      .test-top-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+      .test-name { font-weight: 700; color: var(--navy); font-size: 1.02rem; }
+      @media (prefers-color-scheme: dark) { .test-name { color: var(--accent); } }
+      .timer {
+        font-variant-numeric: tabular-nums;
+        font-weight: 700;
+        font-size: 1.15rem;
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 5px 14px;
+        white-space: nowrap;
+      }
+      .timer.low { color: var(--warn); border-color: var(--warn); }
+      .qcount { color: var(--muted); font-size: 0.9rem; margin-top: 8px; font-weight: 600; }
+      .progress {
+        height: 8px;
+        background: var(--line);
+        border-radius: 999px;
+        overflow: hidden;
+        margin-top: 6px;
+      }
+      .progress > div { height: 100%; background: var(--accent); width: 0%; transition: width 0.25s ease; }
+      .question-card {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 22px 20px;
+      }
+      .question-text { font-size: 1.22rem; font-weight: 600; line-height: 1.45; margin: 0 0 20px; word-wrap: break-word; }
+      .options { display: grid; gap: 10px; }
+      .option {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        text-align: left;
+        width: 100%;
+        background: var(--card);
+        border: 2px solid var(--line);
+        color: var(--ink);
+        border-radius: 12px;
+        padding: 15px 16px;
+        font-size: 1.08rem;
+        font-weight: 500;
+      }
+      .option .letter {
+        flex: 0 0 auto;
+        width: 32px; height: 32px;
+        border-radius: 50%;
+        background: var(--chip);
+        display: flex; align-items: center; justify-content: center;
+        font-weight: 700;
+        font-size: 0.95rem;
+      }
+      .option.selected { border-color: var(--accent); background: var(--selected); }
+      .option.selected .letter { background: var(--accent); color: #fff; }
+      .nav-row { display: flex; gap: 10px; margin-top: 18px; }
+      .btn-nav {
+        flex: 1;
+        padding: 13px 10px;
+        background: var(--card);
+        border: 1px solid var(--line);
+        color: var(--ink);
+        font-size: 1rem;
+      }
+      .btn-nav:disabled { opacity: 0.4; cursor: default; }
+      .btn-submit {
+        width: 100%;
+        margin-top: 12px;
+        padding: 14px;
+        background: var(--good);
+        color: #fff;
+        font-size: 1.05rem;
+      }
+      .palette-title { margin: 22px 0 8px; font-size: 0.92rem; color: var(--muted); font-weight: 600; }
+      .palette { display: flex; flex-wrap: wrap; gap: 7px; }
+      .palette button {
+        width: 42px; height: 42px;
+        border-radius: 9px;
+        background: var(--card);
+        border: 1px solid var(--line);
+        color: var(--ink);
+        font-weight: 600;
+        font-size: 0.95rem;
+        padding: 0;
+      }
+      .palette button.answered { background: var(--navy); color: #fff; border-color: var(--navy); }
+      .palette button.current { outline: 3px solid var(--accent); outline-offset: 1px; }
+
+      /* ---------- Modal ---------- */
+      .modal-backdrop {
+        position: fixed; inset: 0;
+        background: rgba(5, 12, 26, 0.6);
+        display: flex; align-items: center; justify-content: center;
+        padding: 20px;
+        z-index: 50;
+      }
+      .modal {
+        background: var(--card);
+        color: var(--ink);
+        border-radius: 14px;
+        padding: 24px 22px;
+        max-width: 420px;
+        width: 100%;
+      }
+      .modal h3 { margin: 0 0 8px; font-size: 1.15rem; }
+      .modal p { margin: 0 0 18px; color: var(--muted); }
+      .modal .row { display: flex; gap: 10px; }
+      .modal .row button { flex: 1; padding: 12px; font-size: 1rem; }
+      .btn-cancel { background: var(--card); border: 1px solid var(--line); color: var(--ink); }
+      .btn-confirm { background: var(--good); color: #fff; }
+
+      /* ---------- Result ---------- */
+      .result-card {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 26px 22px;
+        text-align: center;
+        margin-bottom: 16px;
+      }
+      .badge {
+        display: inline-block;
+        font-size: 1.3rem;
+        font-weight: 800;
+        letter-spacing: 0.06em;
+        border-radius: 999px;
+        padding: 8px 30px;
+        margin-bottom: 14px;
+      }
+      .badge.pass { background: var(--good-bg); color: var(--good); }
+      .badge.fail { background: var(--bad-bg); color: var(--bad); }
+      .score-big { font-size: 2.6rem; font-weight: 800; line-height: 1.1; }
+      .score-sub { color: var(--muted); margin: 4px 0 18px; }
+      .stat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; text-align: left; }
+      @media (min-width: 520px) { .stat-grid { grid-template-columns: repeat(4, 1fr); } }
+      .stat {
+        background: var(--bg);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 12px 14px;
+      }
+      .stat .num { font-size: 1.35rem; font-weight: 800; }
+      .stat .lbl { font-size: 0.82rem; color: var(--muted); font-weight: 600; }
+      .stat .num.good { color: var(--good); }
+      .stat .num.bad { color: var(--bad); }
+      .result-actions { display: flex; gap: 10px; margin-bottom: 22px; }
+      .result-actions button { flex: 1; padding: 14px; font-size: 1rem; }
+      .btn-retake { background: var(--navy); color: #fff; }
+      .btn-home { background: var(--card); border: 1px solid var(--line); color: var(--ink); }
+      .review-title { font-size: 1.15rem; margin: 0 0 12px; }
+      .review-item {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 16px 18px;
+        margin-bottom: 10px;
+      }
+      .review-item .rq { font-weight: 600; margin: 0 0 10px; font-size: 1.02rem; }
+      .review-item .rq .qn { color: var(--muted); font-weight: 700; margin-right: 6px; }
+      .r-opt {
+        display: flex; gap: 10px; align-items: baseline;
+        padding: 7px 10px;
+        border-radius: 8px;
+        font-size: 0.98rem;
+        margin-bottom: 4px;
+      }
+      .r-opt .letter { font-weight: 700; flex: 0 0 20px; }
+      .r-opt.correct { background: var(--good-bg); }
+      .r-opt.wrong-pick { background: var(--bad-bg); }
+      .r-tag { font-size: 0.78rem; font-weight: 700; margin-left: auto; white-space: nowrap; }
+      .r-tag.good { color: var(--good); }
+      .r-tag.bad { color: var(--bad); }
+      .skipped-note { color: var(--muted); font-size: 0.9rem; margin-top: 6px; font-style: italic; }
+      .hidden { display: none !important; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+
+      <!-- ============ HOME VIEW ============ -->
+      <section id="view-home">
+        <div class="hero">
+          <span class="anchor" aria-hidden="true">⚓</span>
+          <h1>Pak Navy Civilian Apprenticeship — Test Preparation</h1>
+          <p>Practice tests in the same pattern as the Pakistan Navy initial test — matric level, MCQ-based, timed.</p>
+        </div>
+
+        <div class="pattern-note">
+          <strong>How the real test works:</strong> The Navy initial test is taken on a computer (E-Testing) at the
+          Navy Selection Centre. It has three parts — <strong>Verbal Intelligence</strong>, <strong>Non-Verbal
+          Intelligence</strong> and an <strong>Academic Test</strong>. Each part is timed, there is usually
+          <strong>no negative marking</strong>, and you need about <strong>50% marks</strong> to pass. Practice each
+          part below, exactly like the real thing.
+        </div>
+
+        <div class="test-card">
+          <h2>1. Verbal Intelligence Test</h2>
+          <p>Number &amp; letter series, coding, analogies, synonyms &amp; antonyms, odd one out and simple reasoning.</p>
+          <div class="meta"><span>75 MCQs</span><span>45 Minutes</span><span>Passing: 50%</span></div>
+          <button class="btn-start" data-start="verbal">Start Test</button>
+        </div>
+
+        <div class="test-card">
+          <h2>2. Non-Verbal Intelligence Test</h2>
+          <p>Shapes, patterns, mirror &amp; water images and figure series — solved by looking, not by language.</p>
+          <div class="meta"><span>60 MCQs</span><span>45 Minutes</span><span>Passing: 50%</span></div>
+          <button class="btn-start" data-start="nonverbal">Start Test</button>
+        </div>
+
+        <div class="test-card">
+          <h2>3. Academic Test</h2>
+          <p>Matric-level English, Mathematics, Physics, Chemistry and General Knowledge / Pakistan Studies.</p>
+          <div class="meta"><span>75 MCQs</span><span>45 Minutes</span><span>Passing: 50%</span></div>
+          <button class="btn-start" data-start="academic">Start Test</button>
+        </div>
+
+        <div class="tips">
+          <h3>Tips for test day</h3>
+          <ul>
+            <li>Do not spend too long on one question — skip it and come back if time is left.</li>
+            <li>There is usually no negative marking, so attempt every question, even by guessing.</li>
+            <li>Calculators are not allowed — practise mental maths for percentages and division.</li>
+            <li>In non-verbal questions, look for rotation, movement of dots and repeating patterns.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ============ TEST VIEW ============ -->
+      <section id="view-test" class="hidden">
+        <div class="test-top">
+          <div class="test-top-row">
+            <div class="test-name" id="test-name">Test</div>
+            <div class="timer" id="timer">45:00</div>
+          </div>
+          <div class="qcount" id="qcount">Question 1 of 40</div>
+          <div class="progress"><div id="progress-bar"></div></div>
+        </div>
+
+        <div class="question-card">
+          <p class="question-text" id="question-text"></p>
+          <div class="options" id="options"></div>
+        </div>
+
+        <div class="nav-row">
+          <button class="btn-nav" id="btn-prev">← Previous</button>
+          <button class="btn-nav" id="btn-next">Next →</button>
+        </div>
+        <button class="btn-submit" id="btn-submit">Submit Test</button>
+
+        <div class="palette-title">Jump to a question (dark = answered):</div>
+        <div class="palette" id="palette"></div>
+      </section>
+
+      <!-- ============ RESULT VIEW ============ -->
+      <section id="view-result" class="hidden">
+        <div class="result-card">
+          <div class="badge" id="result-badge">PASS</div>
+          <div class="score-big" id="result-score">0%</div>
+          <div class="score-sub" id="result-sub"></div>
+          <div class="stat-grid">
+            <div class="stat"><div class="num good" id="stat-correct">0</div><div class="lbl">Correct</div></div>
+            <div class="stat"><div class="num bad" id="stat-wrong">0</div><div class="lbl">Wrong</div></div>
+            <div class="stat"><div class="num" id="stat-skipped">0</div><div class="lbl">Skipped</div></div>
+            <div class="stat"><div class="num" id="stat-time">0:00</div><div class="lbl">Time Used</div></div>
+          </div>
+        </div>
+
+        <div class="result-actions">
+          <button class="btn-retake" id="btn-retake">Retake Test</button>
+          <button class="btn-home" id="btn-home">Home</button>
+        </div>
+
+        <h3 class="review-title">Review Answers</h3>
+        <div id="review-list"></div>
+
+        <div class="result-actions" style="margin-top:18px;">
+          <button class="btn-retake" id="btn-retake-2">Retake Test</button>
+          <button class="btn-home" id="btn-home-2">Home</button>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- ============ CONFIRM MODAL ============ -->
+    <div class="modal-backdrop hidden" id="modal">
+      <div class="modal">
+        <h3 id="modal-title">Submit test?</h3>
+        <p id="modal-text"></p>
+        <div class="row">
+          <button class="btn-cancel" id="modal-cancel">Keep Solving</button>
+          <button class="btn-confirm" id="modal-confirm">Submit</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      var TESTS = {
+        verbal: {
+          name: "Verbal Intelligence Test",
+          minutes: 45,
+          questions: [{"q":"What comes next in the series: 2, 6, 12, 20, 30, ?","o":["40","42","44","38"],"a":1},{"q":"What comes next in the series: 3, 9, 27, 81, ?","o":["243","162","108","324"],"a":0},{"q":"What comes next in the series: 5, 10, 20, 40, ?","o":["60","70","80","100"],"a":2},{"q":"What comes next in the series: 1, 4, 9, 16, 25, ?","o":["32","36","40","49"],"a":1},{"q":"What comes next in the series: 100, 90, 81, 73, 66, ?","o":["58","59","60","61"],"a":2},{"q":"What comes next in the series: 2, 3, 5, 7, 11, 13, ?","o":["14","15","17","18"],"a":2},{"q":"What comes next in the series: 1, 2, 6, 24, 120, ?","o":["240","360","600","720"],"a":3},{"q":"What comes next in the series: 4, 9, 19, 39, 79, ?","o":["119","139","159","169"],"a":2},{"q":"What comes next in the series: A, C, F, J, O, ?","o":["S","T","U","V"],"a":2},{"q":"What comes next in the series: Z, X, V, T, ?","o":["S","R","Q","P"],"a":1},{"q":"What comes next in the series: ACE, BDF, CEG, ?","o":["DFG","DFH","DEH","FGH"],"a":1},{"q":"What comes next in the series: AB, DE, GH, JK, ?","o":["LM","MN","NO","MO"],"a":1},{"q":"If C = 3, A = 1, T = 20, then CAT = 3120. What is DOG? (D = 4, O = 15, G = 7)","o":["4157","4158","7415","5174"],"a":0},{"q":"If BOOK is written as CPPL, how is PEN written?","o":["QEP","QFO","PEO","RGO"],"a":1},{"q":"If LION is coded as NKQP, how is TIGER coded?","o":["VKIGT","UJHFS","UKHGT","WKIGT"],"a":0},{"q":"If 2 = 6, 3 = 12, 4 = 20, then 5 = ?","o":["25","28","30","32"],"a":2},{"q":"Book : Pages :: Wall : ?","o":["Cement","Bricks","Paint","Roof"],"a":1},{"q":"Doctor : Hospital :: Teacher : ?","o":["Court","Office","School","Library"],"a":2},{"q":"Ship : Sea :: Camel : ?","o":["Forest","Desert","Mountain","River"],"a":1},{"q":"Eye : See :: Ear : ?","o":["Smell","Taste","Hear","Touch"],"a":2},{"q":"Pen : Write :: Knife : ?","o":["Draw","Cut","Paint","Dig"],"a":1},{"q":"Bird : Fly :: Fish : ?","o":["Walk","Swim","Jump","Run"],"a":1},{"q":"Hot : Cold :: Day : ?","o":["Morning","Evening","Night","Noon"],"a":2},{"q":"Finger : Hand :: Toe : ?","o":["Leg","Foot","Arm","Head"],"a":1},{"q":"What is the synonym of HAPPY?","o":["Sad","Angry","Joyful","Tired"],"a":2},{"q":"What is the synonym of BRAVE?","o":["Courageous","Weak","Afraid","Shy"],"a":0},{"q":"What is the synonym of RAPID?","o":["Slow","Fast","Late","Early"],"a":1},{"q":"What is the antonym of ANCIENT?","o":["Old","Modern","Antique","Past"],"a":1},{"q":"What is the antonym of VICTORY?","o":["Win","Success","Defeat","Glory"],"a":2},{"q":"What is the antonym of EXPAND?","o":["Grow","Stretch","Contract","Increase"],"a":2},{"q":"Which one is different from the rest?","o":["Apple","Banana","Mango","Potato"],"a":3},{"q":"Which one is different from the rest?","o":["London","Karachi","Lahore","Islamabad"],"a":0},{"q":"Which one is different from the rest?","o":["Square","Circle","Triangle","Rectangle"],"a":1},{"q":"Which one is different from the rest?","o":["January","March","June","May"],"a":2},{"q":"A man points to a girl and says: 'She is the daughter of my mother.' Who is the girl to the man?","o":["Cousin","Aunt","Sister","Niece"],"a":2},{"q":"Ali's father's brother is Ali's ______.","o":["Cousin","Uncle","Brother","Grandfather"],"a":1},{"q":"Sara is Ahmed's sister. Ahmed is Fatima's son. Sara is Fatima's ______.","o":["Niece","Daughter","Sister","Aunt"],"a":1},{"q":"If today is Monday, what day will it be after 15 days?","o":["Monday","Tuesday","Wednesday","Sunday"],"a":1},{"q":"If yesterday was Friday, what day will tomorrow be?","o":["Saturday","Sunday","Monday","Thursday"],"a":1},{"q":"If 5 workers make 5 chairs in 5 days, in how many days will 100 workers make 100 chairs?","o":["5 days","20 days","100 days","25 days"],"a":0},{"q":"What comes next in the series: 7, 14, 21, 28, ?","o":["32","35","36","42"],"a":1},{"q":"What comes next in the series: 1, 3, 6, 10, 15, ?","o":["18","20","21","25"],"a":2},{"q":"What comes next in the series: 81, 27, 9, 3, ?","o":["1","2","0","6"],"a":0},{"q":"What comes next in the series: 2, 5, 11, 23, 47, ?","o":["71","83","95","94"],"a":2},{"q":"What comes next in the series: 10, 11, 13, 16, 20, ?","o":["24","25","26","22"],"a":1},{"q":"What comes next in the series: 144, 121, 100, 81, ?","o":["49","64","72","60"],"a":1},{"q":"What comes next in the series: 3, 5, 9, 17, 33, ?","o":["49","57","65","63"],"a":2},{"q":"What comes next in the series: 20, 19, 17, 14, 10, ?","o":["5","6","7","8"],"a":0},{"q":"What comes next in the series: B, D, G, K, P, ?","o":["U","V","W","T"],"a":1},{"q":"What comes next in the series: MN, NO, OP, PQ, ?","o":["QR","RS","PR","QS"],"a":0},{"q":"What comes next in the series: A, Z, B, Y, C, ?","o":["W","X","D","Y"],"a":1},{"q":"What comes next in the series: J, F, M, A, M, ? (Hint: months of the year)","o":["J","A","S","O"],"a":0},{"q":"If R = 18, A = 1, M = 13, then RAM = 18113. What is SAM? (S = 19)","o":["19113","18114","1913","19114"],"a":0},{"q":"If HAND is written as GZMC, how is LEG written?","o":["KDF","KDE","JCF","KEG"],"a":0},{"q":"If 1 = 3, 2 = 6, 3 = 9, then 7 = ?","o":["14","18","21","24"],"a":2},{"q":"If C + A + T = 3 + 1 + 20 = 24, then D + O + G = 4 + 15 + 7 = ?","o":["24","25","26","27"],"a":2},{"q":"Water : Thirst :: Food : ?","o":["Taste","Hunger","Plate","Cook"],"a":1},{"q":"Wheel : Car :: Page : ?","o":["Cover","Book","Read","Paper"],"a":1},{"q":"Sun : Day :: Moon : ?","o":["Star","Night","Sky","Light"],"a":1},{"q":"Dog : Puppy :: Cat : ?","o":["Puppy","Kitten","Cub","Calf"],"a":1},{"q":"Teacher : Class :: Captain : ?","o":["Players","Team","Ground","Match"],"a":1},{"q":"January : Month :: Monday : ?","o":["Week","Day","Date","Time"],"a":1},{"q":"What is the synonym of ANGRY?","o":["Calm","Furious","Happy","Kind"],"a":1},{"q":"What is the synonym of DIFFICULT?","o":["Easy","Hard","Soft","Simple"],"a":1},{"q":"What is the antonym of ARRIVE?","o":["Come","Depart","Reach","Enter"],"a":1},{"q":"What is the antonym of FLOAT?","o":["Swim","Sink","Drift","Sail"],"a":1},{"q":"Which one is different from the rest?","o":["11","13","15","17"],"a":2},{"q":"Which one is different from the rest?","o":["Rose","Lily","Mango","Jasmine"],"a":2},{"q":"Which one is different from the rest?","o":["Cricket","Hockey","Football","Chess"],"a":3},{"q":"Which one is different from the rest?","o":["121","144","169","190"],"a":3},{"q":"A woman says about a man: 'He is the son of my father.' Who is the man to the woman?","o":["Uncle","Brother","Father","Cousin"],"a":1},{"q":"Ahmed says about a boy: 'He is my sister's son.' The boy is Ahmed's ______.","o":["Son","Nephew","Cousin","Brother"],"a":1},{"q":"If 1 January is a Friday, what day is 8 January?","o":["Thursday","Friday","Saturday","Sunday"],"a":1},{"q":"A bus travels 90 km in 3 hours. What is its speed?","o":["25 km/h","30 km/h","35 km/h","45 km/h"],"a":1},{"q":"Which word can be formed from the letters of EXAMINATION?","o":["Nation","Exam","Mine","All of these"],"a":3}]
+        },
+        nonverbal: {
+          name: "Non-Verbal Intelligence Test",
+          minutes: 45,
+          questions: [{"q":"What comes next in the series: ● ○ ● ○ ● ?","o":["●","○","▲","■"],"a":1},{"q":"What comes next in the series: ▲ ▲ △ ▲ ▲ △ ?","o":["△","▲","●","○"],"a":1},{"q":"What comes next in the series: ★ ☆ ★ ☆ ★ ?","o":["★","☆","●","◆"],"a":1},{"q":"What comes next in the series: ↑ → ↓ ← ↑ → ↓ ?","o":["↑","→","↓","←"],"a":3},{"q":"What comes next in the series: ◆ ◇ ◆ ◇ ◆ ?","o":["◆","◇","●","■"],"a":1},{"q":"In a series of figures, the number of triangles is 1, 2, 4, ... How many triangles will the next figure have?","o":["6","8","10","12"],"a":1},{"q":"Which one is different from the rest?","o":["▲","▲","▲","▼"],"a":3},{"q":"Which shape has NO straight line?","o":["□","△","○","⬟"],"a":2},{"q":"What is the mirror image of the letter 'b'?","o":["b","d","p","q"],"a":1},{"q":"What is the mirror image of the letter 'p'?","o":["p","b","d","q"],"a":3},{"q":"What comes next in the series: A1, B2, C3, D4, ?","o":["E5","F5","E4","F6"],"a":0},{"q":"What comes next in the series: Z1, Y2, X3, ?","o":["V4","W4","W5","V5"],"a":1},{"q":"Find the missing number: Row 1: 3, 6, 5 — Row 2: 4, 8, 7 — Row 3: 5, 10, ?","o":["8","9","10","11"],"a":1},{"q":"Find the missing number: Row 1: 2, 4, 8 — Row 2: 3, 6, 12 — Row 3: 4, 8, ?","o":["12","14","16","20"],"a":2},{"q":"In a series of figures, the number of dots is 1, 3, 5, ... How many dots will the next figure have?","o":["6","7","8","9"],"a":1},{"q":"What comes next in the series: ♥ ♠ ♥ ♠ ♥ ?","o":["♥","♠","♦","♣"],"a":1},{"q":"What comes next in the series: ← ← → ← ← → ?","o":["→","←","↑","↓"],"a":1},{"q":"What comes next in the series: ◐ ◑ ◐ ◑ ?","o":["◑","◐","●","○"],"a":1},{"q":"Which number is different from the rest?","o":["4","9","20","16"],"a":2},{"q":"What comes next in the series: □ ◇ □ ◇ □ ?","o":["□","◇","○","△"],"a":1},{"q":"What comes next in the series: 1△, 2▲, 3△, 4▲, ?","o":["5▲","5△","6△","4△"],"a":1},{"q":"5 and 3 give 16. 6 and 2 give 32. What do 7 and 3 give?","o":["38","40","42","46"],"a":1},{"q":"Box 1: 3 and 4 give 12. Box 2: 5 and 2 give 10. Box 3: 7 and 3 give ?","o":["18","21","24","20"],"a":1},{"q":"What comes next in the series: A□, B■, C□, D■, ?","o":["E■","E□","F□","F■"],"a":1},{"q":"What comes next in the series: ↑ ← ↓ → ↑ ?","o":["↓","→","↑","←"],"a":2},{"q":"If ▲ = 3 (number of its sides), ■ = 4 and ⬟ = 5, then ◆ = ?","o":["3","4","5","6"],"a":1},{"q":"Which one is different from the rest?","o":["↻","↻","↺","↻"],"a":2},{"q":"What is the mirror image of the word MOM?","o":["WOW","MOM","MOW","WOM"],"a":1},{"q":"What comes next in the series: ☆ ★ ☆ ★ ☆ ?","o":["☆","★","●","◆"],"a":1},{"q":"What is the water image of the number 8?","o":["3","8","9","6"],"a":1},{"q":"What comes next in the series: ○ ○ ● ○ ○ ● ?","o":["●","○","▲","■"],"a":1},{"q":"What comes next in the series: ■ □ ■ □ ■ ?","o":["■","□","●","○"],"a":1},{"q":"What comes next in the series: ★★★ ☆ ★★★ ☆ ?","o":["★★★","☆","★★","★"],"a":0},{"q":"What comes next in the series: → → ↑ → → ↑ ?","o":["↑","→","↓","←"],"a":1},{"q":"What comes next in the series: ● ▲ ■ ● ▲ ■ ?","o":["▲","■","●","◆"],"a":2},{"q":"A series of figures has 3, 4, 5, ... sides. How many sides will the next figure have?","o":["5","6","7","8"],"a":1},{"q":"Which one is different from the rest?","o":["⬜","⬛","⬜","⬜"],"a":1},{"q":"Which number is different from the rest?","o":["25","36","50","49"],"a":2},{"q":"Which letter looks exactly the same in a mirror?","o":["A","B","C","D"],"a":0},{"q":"What comes next in the box series: 10 → 20 → 40 → ?","o":["50","60","80","70"],"a":2},{"q":"What comes next in the series: 1■, 2□, 3■, 4□, ?","o":["5□","5■","6■","4■"],"a":1},{"q":"Find the missing number: Row 1: 8, 4, 2 — Row 2: 12, 6, 3 — Row 3: 20, 10, ?","o":["4","5","6","10"],"a":1},{"q":"Find the missing number: Row 1: 5, 25, 125 — Row 2: 2, 4, 8 — Row 3: 3, 9, ?","o":["18","21","27","30"],"a":2},{"q":"In a series of figures, the number of lines is 2, 4, 6, ... How many lines will the next figure have?","o":["7","8","9","10"],"a":1},{"q":"What comes next in the series: ♣ ♠ ♣ ♠ ♣ ?","o":["♣","♠","♥","♦"],"a":1},{"q":"What comes next in the series: → ↓ → ↓ → ?","o":["→","↓","↑","←"],"a":1},{"q":"Which number is different from the rest?","o":["8","27","64","100"],"a":3},{"q":"Find the missing letter: Row 1: A, D, G — Row 2: J, M, P — Row 3: S, V, ?","o":["W","X","Y","Z"],"a":2},{"q":"In a series of figures, the number of stars is 2, 4, 8, 16, ... How many stars will the next figure have?","o":["24","30","32","36"],"a":2},{"q":"What comes next in the series: ◆◆ ◇ ◆◆ ◇ ?","o":["◇","◆◆","◆","◇◇"],"a":1},{"q":"In a code, ● = 1, ●● = 2, ●●● = 3. What is ●●●●● in this code?","o":["4","5","6","3"],"a":1},{"q":"What comes next in the series: → ↓ ← ↑ → ?","o":["→","↓","←","↑"],"a":1},{"q":"Which figure has 4 corners but is NOT a square?","o":["Triangle","Rectangle","Circle","Pentagon"],"a":1},{"q":"What comes next in the series: Z, Y, X, W, ?","o":["U","V","T","S"],"a":1},{"q":"What comes next in the series: 3, 3, 6, 6, 9, 9, ?","o":["10","11","12","9"],"a":2},{"q":"2 and 8 make 10. 3 and 7 make 10. What do 5 and 6 make?","o":["10","11","12","13"],"a":1},{"q":"Figures in a series have 3, 5, 7, ... triangles. How many triangles will the next figure have?","o":["8","9","10","11"],"a":1},{"q":"Which letter has a vertical line of symmetry?","o":["F","G","H","J"],"a":2},{"q":"What comes next in the series: ●● ○ ●● ○ ?","o":["○","●●","●","○○"],"a":1},{"q":"Find the missing number: Row 1: 1, 4, 9 — Row 2: 2, 5, 10 — Row 3: 3, 6, ?","o":["10","11","12","15"],"a":1}]
+        },
+        academic: {
+          name: "Academic Test",
+          minutes: 45,
+          questions: [{"q":"What is the synonym of HONEST?","o":["Liar","Truthful","Proud","Clever"],"a":1},{"q":"What is the antonym of BRAVE?","o":["Hero","Strong","Coward","Bold"],"a":2},{"q":"He ______ to school every day.","o":["go","goes","going","gone"],"a":1},{"q":"What is the plural of CHILD?","o":["Childs","Children","Childes","Childrens"],"a":1},{"q":"What is the past tense of WRITE?","o":["Writed","Wrote","Writing","Rote"],"a":1},{"q":"She has ______ her homework.","o":["finish","finished","finishing","finishes"],"a":1},{"q":"Choose the correctly spelled word:","o":["Necesary","Neccessary","Necessary","Necessery"],"a":2},{"q":"The sun rises in the ______.","o":["West","North","East","South"],"a":2},{"q":"He is ______ honest man.","o":["a","an","the","no article"],"a":1},{"q":"He is good ______ English.","o":["in","on","at","for"],"a":2},{"q":"What is 15% of 200?","o":["20","25","30","35"],"a":2},{"q":"If x + 7 = 15, then x = ?","o":["6","7","8","9"],"a":2},{"q":"What is 3/4 of 64?","o":["48","36","42","52"],"a":0},{"q":"What is the average of 10, 20 and 30?","o":["15","20","25","30"],"a":1},{"q":"What is the square root of 144?","o":["11","12","13","14"],"a":1},{"q":"25 × 4 + 10 = ?","o":["100","110","120","140"],"a":1},{"q":"Two numbers are in the ratio 2:3 and their sum is 25. What is the larger number?","o":["10","12","15","20"],"a":2},{"q":"What is the next prime number after 13?","o":["14","15","17","19"],"a":2},{"q":"What is the simple interest on Rs. 1000 at 5% per year for 1 year?","o":["Rs. 25","Rs. 50","Rs. 100","Rs. 500"],"a":1},{"q":"What is the area of a square whose side is 9 cm?","o":["18 cm²","36 cm²","81 cm²","72 cm²"],"a":2},{"q":"0.5 written as a fraction is ______.","o":["1/3","1/2","1/4","2/5"],"a":1},{"q":"If 5 pens cost Rs. 100, what will 8 pens cost?","o":["Rs. 120","Rs. 140","Rs. 160","Rs. 180"],"a":2},{"q":"If 2x = 18, then x = ?","o":["6","8","9","12"],"a":2},{"q":"1 kilometre is equal to ______ metres.","o":["100","500","1000","10000"],"a":2},{"q":"What is the HCF of 12 and 18?","o":["3","4","6","9"],"a":2},{"q":"What is the SI unit of force?","o":["Joule","Newton","Watt","Pascal"],"a":1},{"q":"A car covers 120 km in 2 hours. What is its speed?","o":["40 km/h","50 km/h","60 km/h","80 km/h"],"a":2},{"q":"Which instrument is used to measure electric current?","o":["Voltmeter","Ammeter","Barometer","Thermometer"],"a":1},{"q":"What is the SI unit of electric charge?","o":["Ampere","Volt","Coulomb","Ohm"],"a":2},{"q":"What is the value of 'g' (acceleration due to gravity)?","o":["8.9 m/s²","9.8 m/s²","10.8 m/s²","9.2 m/s²"],"a":1},{"q":"The energy possessed by a moving body is called ______.","o":["Potential energy","Kinetic energy","Heat energy","Chemical energy"],"a":1},{"q":"According to Ohm's law:","o":["V = I / R","V = I × R","V = R / I","V = I² × R"],"a":1},{"q":"Which lens is used to correct short-sightedness (myopia)?","o":["Convex lens","Concave lens","Plane lens","Cylindrical lens"],"a":1},{"q":"What is the SI unit of power?","o":["Joule","Watt","Newton","Pascal"],"a":1},{"q":"Sound travels fastest through ______.","o":["Vacuum","Gases","Liquids","Solids"],"a":3},{"q":"What is the chemical symbol of Gold?","o":["Ag","Au","Gd","Go"],"a":1},{"q":"What is the pH of a neutral solution?","o":["0","1","7","14"],"a":2},{"q":"What is the chemical formula of Sulphuric Acid?","o":["HCl","H₂SO₄","HNO₃","NaOH"],"a":1},{"q":"What is the atomic number of Carbon?","o":["4","6","8","12"],"a":1},{"q":"Which gas is filled in balloons to make them float?","o":["Oxygen","Helium","Carbon dioxide","Nitrogen"],"a":1},{"q":"NaCl is the chemical formula of ______.","o":["Sodium carbonate","Sodium chloride","Potassium chloride","Calcium chloride"],"a":1},{"q":"Which gas is most abundant in the air?","o":["Oxygen","Carbon dioxide","Nitrogen","Argon"],"a":2},{"q":"Water is made up of ______.","o":["Hydrogen only","Oxygen only","Hydrogen and Oxygen","Hydrogen and Carbon"],"a":2},{"q":"Pakistan came into being on ______.","o":["15 August 1947","14 August 1947","23 March 1940","14 August 1948"],"a":1},{"q":"What is the national language of Pakistan?","o":["Punjabi","Urdu","Sindhi","English"],"a":1},{"q":"Who was the first Governor General of Pakistan?","o":["Liaquat Ali Khan","Quaid-e-Azam Muhammad Ali Jinnah","Ayub Khan","Iskander Mirza"],"a":1},{"q":"What is the capital of Pakistan?","o":["Karachi","Lahore","Islamabad","Rawalpindi"],"a":2},{"q":"What is the national game of Pakistan?","o":["Cricket","Hockey","Football","Squash"],"a":1},{"q":"Pakistan Navy Day is celebrated on ______.","o":["6 September","7 September","8 September","14 August"],"a":2},{"q":"Pakistan Naval Headquarters is located in ______.","o":["Karachi","Islamabad","Lahore","Gwadar"],"a":1},{"q":"What is the synonym of TRUE?","o":["False","Real","Fake","Wrong"],"a":1},{"q":"What is the antonym of START?","o":["Begin","Finish","Open","Go"],"a":1},{"q":"They ______ playing football.","o":["is","am","are","be"],"a":2},{"q":"What is the past tense of GO?","o":["Goed","Went","Going","Goes"],"a":1},{"q":"______ you like tea?","o":["Does","Do","Is","Are"],"a":1},{"q":"What is 40% of 150?","o":["40","50","60","75"],"a":2},{"q":"12 × 8 = ?","o":["86","96","108","112"],"a":1},{"q":"If a = 5 and b = 3, then a² + b² = ?","o":["28","30","34","64"],"a":2},{"q":"What is the perimeter of a rectangle with length 10 cm and width 6 cm?","o":["16 cm","26 cm","32 cm","60 cm"],"a":2},{"q":"7/8 − 3/8 = ?","o":["1/4","1/2","3/8","5/8"],"a":1},{"q":"What is the smallest prime number?","o":["0","1","2","3"],"a":2},{"q":"A train runs at 80 km/h. How far will it go in 2.5 hours?","o":["160 km","180 km","200 km","240 km"],"a":2},{"q":"What is the SI unit of energy?","o":["Newton","Joule","Watt","Volt"],"a":1},{"q":"An electric bulb converts electrical energy into ______.","o":["Sound energy","Light and heat energy","Motion energy","Chemical energy"],"a":1},{"q":"A mass of 10 kg is accelerated at 2 m/s². The force applied is ______. (F = m × a)","o":["5 N","12 N","20 N","200 N"],"a":2},{"q":"Which instrument is used to measure temperature?","o":["Barometer","Thermometer","Ammeter","Hygrometer"],"a":1},{"q":"Which of the following is a good conductor of electricity?","o":["Rubber","Wood","Copper","Plastic"],"a":2},{"q":"What is the chemical formula of Methane?","o":["CO₂","CH₄","H₂O","NH₃"],"a":1},{"q":"Which acid is present in lemon?","o":["Acetic acid","Citric acid","Sulphuric acid","Nitric acid"],"a":1},{"q":"What is the chemical symbol of Iron?","o":["Ir","Fe","In","Io"],"a":1},{"q":"About what percentage of air is Oxygen?","o":["10%","21%","50%","78%"],"a":1},{"q":"Who wrote the national anthem of Pakistan?","o":["Allama Iqbal","Hafeez Jalandhari","Faiz Ahmed Faiz","Ahmed Nadeem Qasmi"],"a":1},{"q":"Which is the largest province of Pakistan by area?","o":["Punjab","Sindh","Balochistan","Khyber Pakhtunkhwa"],"a":2},{"q":"Quaid-e-Azam Muhammad Ali Jinnah was born in ______.","o":["Lahore","Karachi","Delhi","Bombay"],"a":1},{"q":"The Pakistan Resolution (1940) was passed in which city?","o":["Karachi","Delhi","Lahore","Dhaka"],"a":2}]
+        }
+      };
+
+      var LETTERS = ["A", "B", "C", "D"];
+      var state = null;
+      var timerId = null;
+
+      function $(id) { return document.getElementById(id); }
+
+      function show(view) {
+        ["view-home", "view-test", "view-result"].forEach(function (v) {
+          $(v).classList.toggle("hidden", v !== view);
+        });
+        window.scrollTo(0, 0);
+      }
+
+      function fmt(sec) {
+        var m = Math.floor(sec / 60);
+        var s = sec % 60;
+        return m + ":" + (s < 10 ? "0" : "") + s;
+      }
+
+      function startTest(key) {
+        var t = TESTS[key];
+        state = {
+          key: key,
+          test: t,
+          answers: new Array(t.questions.length).fill(null),
+          current: 0,
+          totalSec: t.minutes * 60,
+          leftSec: t.minutes * 60,
+          startStamp: Date.now()
+        };
+        $("test-name").textContent = t.name;
+        buildPalette();
+        renderQuestion();
+        updateTimer();
+        clearInterval(timerId);
+        timerId = setInterval(function () {
+          state.leftSec--;
+          if (state.leftSec <= 0) {
+            state.leftSec = 0;
+            updateTimer();
+            finishTest(true);
+            return;
+          }
+          updateTimer();
+        }, 1000);
+        show("view-test");
+      }
+
+      function updateTimer() {
+        var el = $("timer");
+        el.textContent = fmt(state.leftSec);
+        el.classList.toggle("low", state.leftSec < 120);
+      }
+
+      function renderQuestion() {
+        var t = state.test;
+        var i = state.current;
+        var q = t.questions[i];
+        $("qcount").textContent = "Question " + (i + 1) + " of " + t.questions.length;
+        $("progress-bar").style.width = ((i + 1) / t.questions.length * 100) + "%";
+        $("question-text").textContent = q.q;
+        var box = $("options");
+        box.innerHTML = "";
+        q.o.forEach(function (opt, idx) {
+          var b = document.createElement("button");
+          b.className = "option" + (state.answers[i] === idx ? " selected" : "");
+          var letter = document.createElement("span");
+          letter.className = "letter";
+          letter.textContent = LETTERS[idx];
+          var text = document.createElement("span");
+          text.textContent = opt;
+          b.appendChild(letter);
+          b.appendChild(text);
+          b.addEventListener("click", function () {
+            state.answers[i] = idx;
+            renderQuestion();
+          });
+          box.appendChild(b);
+        });
+        $("btn-prev").disabled = i === 0;
+        $("btn-next").disabled = i === t.questions.length - 1;
+        var pal = $("palette").children;
+        for (var k = 0; k < pal.length; k++) {
+          pal[k].classList.toggle("current", k === i);
+          pal[k].classList.toggle("answered", state.answers[k] !== null);
+        }
+      }
+
+      function buildPalette() {
+        var pal = $("palette");
+        pal.innerHTML = "";
+        state.test.questions.forEach(function (_, idx) {
+          var b = document.createElement("button");
+          b.textContent = idx + 1;
+          b.addEventListener("click", function () {
+            state.current = idx;
+            renderQuestion();
+          });
+          pal.appendChild(b);
+        });
+      }
+
+      function askSubmit() {
+        var unanswered = state.answers.filter(function (a) { return a === null; }).length;
+        $("modal-text").textContent = unanswered > 0
+          ? "You still have " + unanswered + " unanswered question" + (unanswered === 1 ? "" : "s") + ". Submit the test now?"
+          : "You have answered all questions. Submit the test now?";
+        $("modal").classList.remove("hidden");
+      }
+
+      function finishTest(auto) {
+        clearInterval(timerId);
+        $("modal").classList.add("hidden");
+        var t = state.test;
+        var correct = 0, wrong = 0, skipped = 0;
+        t.questions.forEach(function (q, i) {
+          if (state.answers[i] === null) skipped++;
+          else if (state.answers[i] === q.a) correct++;
+          else wrong++;
+        });
+        var total = t.questions.length;
+        var pct = Math.round(correct / total * 100);
+        var passed = pct >= 50;
+        var usedSec = state.totalSec - state.leftSec;
+
+        var badge = $("result-badge");
+        badge.textContent = passed ? "PASS" : "FAIL";
+        badge.className = "badge " + (passed ? "pass" : "fail");
+        $("result-score").textContent = pct + "%";
+        $("result-sub").textContent = t.name + " — " + correct + " out of " + total + " correct" +
+          (auto ? " (Time finished — test auto-submitted)" : "");
+        $("stat-correct").textContent = correct;
+        $("stat-wrong").textContent = wrong;
+        $("stat-skipped").textContent = skipped;
+        $("stat-time").textContent = fmt(usedSec);
+
+        // Review list
+        var list = $("review-list");
+        list.innerHTML = "";
+        t.questions.forEach(function (q, i) {
+          var item = document.createElement("div");
+          item.className = "review-item";
+          var rq = document.createElement("p");
+          rq.className = "rq";
+          var qn = document.createElement("span");
+          qn.className = "qn";
+          qn.textContent = "Q" + (i + 1) + ".";
+          rq.appendChild(qn);
+          rq.appendChild(document.createTextNode(q.q));
+          item.appendChild(rq);
+          q.o.forEach(function (opt, idx) {
+            var row = document.createElement("div");
+            row.className = "r-opt";
+            var isCorrect = idx === q.a;
+            var isPick = state.answers[i] === idx;
+            if (isCorrect) row.classList.add("correct");
+            if (isPick && !isCorrect) row.classList.add("wrong-pick");
+            var letter = document.createElement("span");
+            letter.className = "letter";
+            letter.textContent = LETTERS[idx];
+            row.appendChild(letter);
+            row.appendChild(document.createTextNode(opt));
+            if (isCorrect) {
+              var tag = document.createElement("span");
+              tag.className = "r-tag good";
+              tag.textContent = isPick ? "✓ Your answer — Correct" : "✓ Correct answer";
+              row.appendChild(tag);
+            } else if (isPick) {
+              var tag2 = document.createElement("span");
+              tag2.className = "r-tag bad";
+              tag2.textContent = "✗ Your answer";
+              row.appendChild(tag2);
+            }
+            item.appendChild(row);
+          });
+          if (state.answers[i] === null) {
+            var note = document.createElement("div");
+            note.className = "skipped-note";
+            note.textContent = "You skipped this question.";
+            item.appendChild(note);
+          }
+          list.appendChild(item);
+        });
+
+        show("view-result");
+      }
+
+      // Wiring
+      document.querySelectorAll("[data-start]").forEach(function (btn) {
+        btn.addEventListener("click", function () { startTest(btn.getAttribute("data-start")); });
+      });
+      $("btn-prev").addEventListener("click", function () {
+        if (state.current > 0) { state.current--; renderQuestion(); }
+      });
+      $("btn-next").addEventListener("click", function () {
+        if (state.current < state.test.questions.length - 1) { state.current++; renderQuestion(); }
+      });
+      $("btn-submit").addEventListener("click", askSubmit);
+      $("modal-cancel").addEventListener("click", function () { $("modal").classList.add("hidden"); });
+      $("modal-confirm").addEventListener("click", function () { finishTest(false); });
+      function retake() { startTest(state.key); }
+      function goHome() { clearInterval(timerId); show("view-home"); }
+      $("btn-retake").addEventListener("click", retake);
+      $("btn-retake-2").addEventListener("click", retake);
+      $("btn-home").addEventListener("click", goHome);
+      $("btn-home-2").addEventListener("click", goHome);
+    </script>
+  </body>
+</html>

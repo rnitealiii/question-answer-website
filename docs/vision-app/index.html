@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vision Study Assistant — Browser Version</title>
+<style>
+  *{box-sizing:border-box}
+  body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;margin:0;background:#0f172a;color:#e2e8f0}
+  header{background:#1e293b;padding:16px 20px;border-bottom:1px solid #334155}
+  header h1{margin:0;font-size:22px}
+  header p{margin:6px 0 0;color:#94a3b8;font-size:14px}
+  main{max-width:900px;margin:0 auto;padding:16px}
+  .card{background:#1e293b;border:1px solid #334155;border-radius:14px;padding:16px;margin-bottom:16px}
+  h2{margin:0 0 10px;font-size:18px}
+  h3{margin:14px 0 6px;font-size:15px}
+  video,img.preview{width:100%;max-height:420px;object-fit:contain;background:#000;border-radius:10px;display:block}
+  .row{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  button{background:#2563eb;color:#fff;border:0;padding:10px 14px;border-radius:10px;font-size:15px;cursor:pointer}
+  button.secondary{background:#334155}
+  button:disabled{opacity:.5;cursor:not-allowed}
+  input,textarea,select{width:100%;padding:10px;border-radius:10px;border:1px solid #475569;background:#0f172a;color:#e2e8f0;font-size:15px}
+  textarea{min-height:110px;white-space:pre-wrap}
+  label{font-size:14px;color:#cbd5e1;display:block;margin:8px 0 4px}
+  .status{background:#0f172a;border:1px solid #475569;border-radius:10px;padding:10px;white-space:pre-wrap;font-size:14px}
+  .answer{white-space:pre-wrap;line-height:1.6}
+  .small{font-size:13px;color:#94a3b8;line-height:1.5}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  @media(max-width:600px){.grid{grid-template-columns:1fr}}
+  a{color:#93c5fd}
+</style>
+</head>
+<body>
+<header>
+  <h1>📷 Vision Study Assistant</h1>
+  <p>Browser version — camera se board ya screen capture karein, phir AI uska reply dega. Koi app install karne ki zaroorat nahi.</p>
+</header>
+<main>
+
+<div class="card">
+  <h2>1. Camera / Capture</h2>
+  <p class="small">Best result ke liye: page ko <b>https</b> par Chrome ya Edge me kholein, camera permission Allow karein, aur board/screen ko saaf, seedha aur roshni me rakhein. Aapki photo aur API key sirf isi browser me rehti hai — ye page kuch save ya upload nahi karta, siwaaye Gemini ko bheje gaye sawal ke.</p>
+  <video id="video" autoplay playsinline muted></video>
+  <img id="shot" class="preview" alt="" style="display:none">
+  <div class="row">
+    <button id="btnCam">📷 Camera On karein</button>
+    <button id="btnStopCam" class="secondary">Camera Band karein</button>
+    <button id="btnCapture">📸 Capture karein</button>
+    <button id="btnScreen">🖥️ Screen Share se Capture karein</button>
+  </div>
+  <label>Ya apni gallery se photo chunein (agar camera na chale)</label>
+  <input type="file" id="fileInput" accept="image/*">
+  <p id="captureNote" class="small"></p>
+</div>
+
+<div class="card">
+  <h2>2. Sawal</h2>
+  <label>Apna sawal likhein (khali chhorein to AI poori tasveer samjha dega)</label>
+  <textarea id="question" placeholder="Example: Is circuit ko step by step solve karein..."></textarea>
+  <div class="row">
+    <button id="btnVoice" class="secondary">🎤 Bol kar sawal likhein</button>
+    <button id="btnAsk">Step 1: Photo Parhein (Reading)</button>
+  </div>
+  <p class="small">Voice input sirf Chrome / Edge me kaam karta hai. Agar na chale to sawal type kar dein.</p>
+</div>
+
+<div class="card">
+  <h2>3. AI ki Reading — pehle check karein, phir jawab lein</h2>
+  <p class="small">AI pehle tasveer me likha hua <b>exactly</b> parhega. Agar kuch ghalat parha ho to yahan theek kar dein — jawab isi confirmed reading par banega. Is se ghalti ka chance kam hota hai.</p>
+  <textarea id="transcription" placeholder="Yahan AI ki reading aayegi..."></textarea>
+  <div class="row">
+    <button id="btnAnswer">✅ Confirm karein aur Jawab lein</button>
+    <button id="btnFollowUp" class="secondary">Follow-up Sawal poochein</button>
+    <button id="btnSpeak" class="secondary">🔊 Jawab sunain</button>
+  </div>
+  <div id="status" class="status">Status: Camera on karein, capture karein, phir Step 1 dabayein.</div>
+  <h3>Jawab</h3>
+  <div id="answer" class="answer">Abhi koi jawab nahi hai.</div>
+</div>
+
+<div class="card">
+  <h2>🧮 Exact Calculator (AI ke baghair, 100% hisaab)</h2>
+  <p class="small">AI ke steps ko yahan check karein. Ye calculator andaza nahi lagata — jo likha hai wahi calculate karta hai.</p>
+  <div class="grid">
+    <div><label>Expression (jaise: 12*5 + 220/10, ya sqrt(144), ya 2^3)</label><input id="calcExpr" placeholder="12*5 + 10"></div>
+    <div><label>Result</label><input id="calcResult" readonly placeholder="—"></div>
+  </div>
+  <div class="row"><button id="btnCalc">Calculate karein</button></div>
+  <h3>Electrical quick formulas</h3>
+  <div class="grid">
+    <div><label>Current I (Amp) aur Resistance R (Ohm) — Voltage V = I × R</label><input id="ohmI" type="number" step="any" placeholder="I (A)"><input id="ohmR" type="number" step="any" placeholder="R (Ω)" style="margin-top:8px"></div>
+    <div><label>Voltage V (Volt) aur Current I (Amp) — Power P = V × I</label><input id="powV" type="number" step="any" placeholder="V (V)"><input id="powI" type="number" step="any" placeholder="I (A)" style="margin-top:8px"></div>
+  </div>
+  <div class="row">
+    <button id="btnOhm" class="secondary">V = I × R</button>
+    <button id="btnPower" class="secondary">P = V × I</button>
+  </div>
+  <div class="grid">
+    <div><label>Series resistance (comma se alag: 10, 20, 30)</label><input id="seriesIn" placeholder="10, 20, 30"></div>
+    <div><label>Parallel resistance (comma se alag: 10, 20)</label><input id="parallelIn" placeholder="10, 20"></div>
+  </div>
+  <div class="row">
+    <button id="btnSeries" class="secondary">Series R</button>
+    <button id="btnParallel" class="secondary">Parallel R</button>
+  </div>
+  <div id="calcNote" class="status"></div>
+</div>
+
+<div class="card">
+  <h2>⚙️ Settings — Gemini API Key</h2>
+  <p class="small">Free key yahan se lein: <a href="https://aistudio.google.com" target="_blank" rel="noopener">Google AI Studio</a> → Get API Key → Create API key. Key sirf aapke isi browser me save hoti hai (localStorage). Is page ko kisi ko bhejne se aapki key un tak nahi pahunchti — unhe apni key dalni hogi.</p>
+  <label>Gemini API Key</label>
+  <input type="password" id="apiKey" placeholder="Apni free Gemini API key yahan paste karein">
+  <label>Model</label>
+  <input id="model" value="gemini-2.5-flash">
+  <div class="row">
+    <button id="btnSave">Settings Save karein</button>
+    <button id="btnClearKey" class="secondary">Key Delete karein</button>
+  </div>
+  <p class="small">Honest note: koi bhi AI 100% accuracy ki guarantee nahi de sakta, khaas taur par board ki handwriting me. Is liye Step 1 me reading ko check karna zaroori hai, aur hisaab Calculator se verify karein.</p>
+</div>
+
+</main>
+<script>
+const $ = id => document.getElementById(id);
+let stream = null, currentImageBase64 = null, confirmedText = '', lastQuestion = '', lastAnswer = '', busy = false;
+
+function setStatus(t){ $('status').textContent = t; }
+function needKey(){ const k = localStorage.getItem('vsa_key') || ''; if(!k){ setStatus('Pehle Settings me apni free Gemini API key save karein, phir dobara koshish karein.'); return null; } return k; }
+
+$('apiKey').value = localStorage.getItem('vsa_key') || '';
+$('model').value = localStorage.getItem('vsa_model') || 'gemini-2.5-flash';
+$('btnSave').onclick = () => { localStorage.setItem('vsa_key', $('apiKey').value.trim()); localStorage.setItem('vsa_model', $('model').value.trim() || 'gemini-2.5-flash'); setStatus('Settings save ho gayi.'); };
+$('btnClearKey').onclick = () => { localStorage.removeItem('vsa_key'); $('apiKey').value=''; setStatus('Key delete kar di gayi.'); };
+
+async function startCamera(){
+  try{
+    if(stream) stopCamera();
+    stream = await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment', width:{ideal:1920}, height:{ideal:1080}}, audio:false});
+    $('video').srcObject = stream; $('video').style.display='block'; $('shot').style.display='none';
+    setStatus('Camera on hai. Board ya screen ko frame me rakhein, phir Capture karein.');
+  }catch(e){ setStatus('Camera nahi khul saka: ' + (e.message||e) + ' — Permission Allow karein, ya https par kholein, ya gallery se photo chunein.'); }
+}
+function stopCamera(){ if(stream){ stream.getTracks().forEach(t=>t.stop()); stream=null; } $('video').srcObject=null; }
+$('btnCam').onclick = startCamera;
+$('btnStopCam').onclick = () => { stopCamera(); setStatus('Camera band kar di gayi.'); };
+
+function imageFromCanvas(canvas){
+  const max = 1280, w = canvas.width, h = canvas.height, s = Math.max(w,h) > max ? max / Math.max(w,h) : 1;
+  const c = document.createElement('canvas'); c.width = Math.max(1, Math.round(w*s)); c.height = Math.max(1, Math.round(h*s));
+  c.getContext('2d').drawImage(canvas, 0, 0, c.width, c.height);
+  const url = c.toDataURL('image/jpeg', 0.70);
+  $('shot').src = url; $('shot').style.display='block'; $('video').style.display='none';
+  currentImageBase64 = url.split(',')[1];
+  $('captureNote').textContent = 'Capture ho gaya. Ab Step 1 dabayein — AI pehle photo parhega.';
+  setStatus('Capture ho gaya. Ab Step 1 dabayein.');
+}
+$('btnCapture').onclick = () => {
+  const v = $('video');
+  if(!stream || !v.videoWidth){ setStatus('Pehle Camera On karein, ya gallery se photo chunein.'); return; }
+  const c = document.createElement('canvas'); c.width = v.videoWidth; c.height = v.videoHeight;
+  c.getContext('2d').drawImage(v, 0, 0); imageFromCanvas(c);
+};
+$('btnScreen').onclick = async () => {
+  try{
+    const s = await navigator.mediaDevices.getDisplayMedia({video:true});
+    const v = document.createElement('video'); v.srcObject = s; await v.play();
+    await new Promise(r=>setTimeout(r, 600));
+    const c = document.createElement('canvas'); c.width = v.videoWidth || 1280; c.height = v.videoHeight || 720;
+    c.getContext('2d').drawImage(v, 0, 0); s.getTracks().forEach(t=>t.stop()); imageFromCanvas(c);
+  }catch(e){ setStatus('Screen share cancel ya fail ho gaya: ' + (e.message||e)); }
+};
+$('fileInput').onchange = e => {
+  const f = e.target.files[0]; if(!f) return;
+  const img = new Image();
+  img.onload = () => { const c = document.createElement('canvas'); c.width = img.naturalWidth; c.height = img.naturalHeight; c.getContext('2d').drawImage(img,0,0); imageFromCanvas(c); };
+  img.src = URL.createObjectURL(f);
+};
+
+async function callGemini(prompt, withImage){
+  const key = needKey(); if(!key) throw new Error('NO_KEY');
+  const model = (localStorage.getItem('vsa_model') || 'gemini-2.5-flash').trim();
+  const parts = [{text: prompt}];
+  if(withImage && currentImageBase64) parts.push({inline_data:{mime_type:'image/jpeg', data: currentImageBase64}});
+  const res = await fetch('https://generativelanguage.googleapis.com/v1beta/models/' + encodeURIComponent(model) + ':generateContent?key=' + encodeURIComponent(key), {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({contents:[{parts}], generationConfig:{temperature:0.2}})
+  });
+  const data = await res.json().catch(()=>({}));
+  if(!res.ok){
+    const msg = (data.error && data.error.message) ? data.error.message : ('HTTP ' + res.status);
+    let hint = '';
+    if(res.status===400) hint = ' (model ka naam Settings me check karein)';
+    if(res.status===401 || res.status===403) hint = ' (API key ghalat lag rahi hai — Settings me dobara check karein)';
+    if(res.status===429) hint = ' (free quota / limit — ek minute ruk kar dobara koshish karein)';
+    throw new Error('Gemini error (HTTP ' + res.status + '): ' + msg + hint);
+  }
+  const cands = data.candidates || [];
+  if(!cands.length) throw new Error('Model ne koi jawab nahi diya.' + (data.promptFeedback && data.promptFeedback.blockReason ? ' Block reason: ' + data.promptFeedback.blockReason : ''));
+  const text = (cands[0].content.parts || []).map(p=>p.text||'').join('').trim();
+  if(!text) throw new Error('Model ne khali jawab diya.');
+  return text;
+}
+
+$('btnAsk').onclick = async () => {
+  if(busy) return;
+  if(!currentImageBase64){ setStatus('Pehle camera ya screen se capture karein, ya photo chunein.'); return; }
+  if(!needKey()) return;
+  busy = true; setStatus('Step 1 of 2: Photo parhi ja rahi hai...');
+  try{
+    const text = await callGemini('Transcribe EXACTLY everything that is written or visible in this image: board text, equations, numbers, units, symbols and diagram labels. Keep the original line breaks and order. Do not solve, explain, correct or add anything. If the image is too blurry, dark or unreadable to transcribe reliably, reply starting with IMAGE_UNCLEAR followed by one short sentence explaining the problem.', true);
+    if(text.startsWith('IMAGE_UNCLEAR')){
+      $('transcription').value = '';
+      setStatus('Photo unclear lagi: ' + text.replace('IMAGE_UNCLEAR','').trim() + ' — Dobara saaf photo lein, ya reading khud type karke Confirm dabayein.');
+    } else {
+      $('transcription').value = text;
+      setStatus('Step 1 ho gaya. Reading ko check karein, ghalti ho to theek karein, phir Confirm karein aur Jawab lein.');
+    }
+  }catch(e){ if(e.message!=='NO_KEY') setStatus('Error: ' + e.message); }
+  busy = false;
+};
+$('btnAnswer').onclick = async () => {
+  if(busy) return;
+  if(!currentImageBase64){ setStatus('Pehle capture karein.'); return; }
+  const reading = $('transcription').value.trim();
+  if(!reading){ setStatus('Reading box khali hai — Step 1 karein ya reading khud type karein.'); return; }
+  if(!needKey()) return;
+  const q = $('question').value.trim() || 'Explain what is shown and solve any problem in it, step by step.';
+  confirmedText = reading; lastQuestion = q; busy = true; setStatus('Step 2 of 2: Jawab tayyar ho raha hai...');
+  try{
+    const ans = await callGemini("You are a patient study assistant helping an electrical engineering master's student. The student photographed a board / page / screen. A transcription of it, which the student has checked and confirmed, is given below between the --- lines. The same image is also attached for reference.\n---\n" + reading + "\n---\nStudent's question: " + q + "\nInstructions:\n- Treat the confirmed transcription as the source of truth. If a value in it looks inconsistent, mention that briefly instead of silently changing it.\n- Answer step by step. Put each calculation step on its own line.\n- State any formula before you use it, and keep units in every step.\n- Keep the answer clear and focused on the question.", true);
+    lastAnswer = ans; $('answer').textContent = ans; setStatus('Jawab tayyar hai. Follow-up sawal bhi isi photo par pooch sakte hain.');
+  }catch(e){ if(e.message!=='NO_KEY') setStatus('Error: ' + e.message); }
+  busy = false;
+};
+$('btnFollowUp').onclick = async () => {
+  if(busy) return;
+  if(!currentImageBase64 || !confirmedText){ setStatus('Pehle ek sawal ka jawab lein, phir follow-up poochein.'); return; }
+  const q = $('question').value.trim(); if(!q){ setStatus('Follow-up sawal pehle likhein.'); return; }
+  if(!needKey()) return;
+  busy = true; setStatus('Follow-up par socha ja raha hai...');
+  try{
+    const ans = await callGemini('Continue helping the student with the same board / page / screen as before. The image is attached again, and the confirmed transcription was:\n---\n' + confirmedText + '\n---\nPrevious question: ' + lastQuestion + '\nPrevious answer:\n' + lastAnswer + '\nNew follow-up question: ' + q + '\nAnswer step by step, with each calculation step on its own line and units included.', true);
+    lastQuestion = q; lastAnswer = ans; $('answer').textContent = ans; setStatus('Follow-up ka jawab tayyar hai.');
+  }catch(e){ if(e.message!=='NO_KEY') setStatus('Error: ' + e.message); }
+  busy = false;
+};
+$('btnVoice').onclick = () => {
+  const Rec = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!Rec){ setStatus('Voice input is browser me supported nahi hai — sawal type kar dein.'); return; }
+  const r = new Rec(); r.lang = 'en-US'; r.interimResults = false;
+  r.onresult = ev => { $('question').value = ev.results[0][0].transcript; setStatus('Voice sawal likh diya gaya.'); };
+  r.onerror = ev => setStatus('Voice input error: ' + ev.error);
+  r.start();
+};
+$('btnSpeak').onclick = () => {
+  const t = $('answer').textContent.trim();
+  if(!t || t==='Abhi koi jawab nahi hai.'){ setStatus('Pehle jawab lein, phir sunain.'); return; }
+  speechSynthesis.cancel(); speechSynthesis.speak(new SpeechSynthesisUtterance(t));
+};
+
+// --- Deterministic calculator (port of the Android CalculatorEngine) ---
+function makeParser(s){
+  s = s.replace(/×/g,'*').replace(/÷/g,'/').replace(/−/g,'-').replace(/,/g,'').trim();
+  let pos = 0;
+  function peek(){ return pos < s.length ? s[pos] : null; }
+  function skip(){ while(peek()===' ') pos++; }
+  function parseExpr(){ let v = parseTerm(); while(true){ skip(); if(peek()==='+'){pos++; v+=parseTerm();} else if(peek()==='-'){pos++; v-=parseTerm();} else return v; } }
+  function parseTerm(){ let v = parseFactor(); while(true){ skip(); if(peek()==='*'){pos++; v*=parseFactor();} else if(peek()==='/'){pos++; const d=parseFactor(); if(d===0) throw new Error('Division by zero'); v/=d;} else return v; } }
+  function parseFactor(){ const b = parseUnary(); skip(); if(peek()==='^'){pos++; return Math.pow(b, parseFactor());} return b; }
+  function parseUnary(){ skip(); if(peek()==='-'){pos++; return -parseUnary();} if(peek()==='+'){pos++; return parseUnary();} if(peek()==='√'){pos++; const v=parseUnary(); if(v<0) throw new Error('Square root of a negative number'); return Math.sqrt(v);} return parsePrimary(); }
+  function parsePrimary(){ skip(); const c = peek(); if(c===null) throw new Error('Unexpected end');
+    if(c==='('){pos++; const v=parseExpr(); skip(); if(peek()!==')') throw new Error('Missing closing parenthesis'); pos++; return v;}
+    if(/[0-9.]/.test(c)){ const st=pos; while(peek()!==null && /[0-9.]/.test(peek())) pos++; const n=parseFloat(s.slice(st,pos)); if(isNaN(n)) throw new Error('Invalid number'); return n; }
+    if(/[A-Za-z]/.test(c)){ const st=pos; while(peek()!==null && /[A-Za-z]/.test(peek())) pos++; const name=s.slice(st,pos).toLowerCase();
+      if(name==='pi') return Math.PI; if(name==='e') return Math.E;
+      if(name==='sqrt'){ const v=parsePrimary(); if(v<0) throw new Error('Square root of a negative number'); return Math.sqrt(v); }
+      throw new Error("Unknown name '" + name + "'"); }
+    throw new Error("Unexpected character '" + c + "'"); }
+  return {evalAll(){ if(!s) throw new Error('Nothing to calculate'); const v=parseExpr(); skip(); if(pos!==s.length) throw new Error("Unexpected character '" + s[pos] + "'"); if(!isFinite(v)) throw new Error('Result is not a finite number'); return v; }};
+}
+function fmt(v){ if(!isFinite(v)) return 'Error'; const r=Math.round(v); if(Math.abs(v-r)<1e-10 && Math.abs(v)<1e15) return String(r); return String(Number(v.toPrecision(10))); }
+$('btnCalc').onclick = () => { try{ $('calcResult').value = fmt(makeParser($('calcExpr').value).evalAll()); $('calcNote').textContent='Result: ' + $('calcResult').value; }catch(e){ $('calcNote').textContent='Error: ' + e.message; } };
+$('btnOhm').onclick = () => { const i=parseFloat($('ohmI').value), r=parseFloat($('ohmR').value); $('calcNote').textContent = (isNaN(i)||isNaN(r)) ? 'I aur R dono likhein.' : ('V = I × R = ' + fmt(i*r) + ' Volt'); };
+$('btnPower').onclick = () => { const v=parseFloat($('powV').value), i=parseFloat($('powI').value); $('calcNote').textContent = (isNaN(v)||isNaN(i)) ? 'V aur I dono likhein.' : ('P = V × I = ' + fmt(v*i) + ' Watt'); };
+function parseList(id){ return $(id).value.split(',').map(x=>parseFloat(x.trim())).filter(x=>!isNaN(x)); }
+$('btnSeries').onclick = () => { const a=parseList('seriesIn'); $('calcNote').textContent = a.length ? ('Series R = ' + fmt(a.reduce((x,y)=>x+y,0)) + ' Ohm') : 'Kam se kam ek resistance likhein.'; };
+$('btnParallel').onclick = () => { const a=parseList('parallelIn'); if(!a.length){ $('calcNote').textContent='Kam se kam ek resistance likhein.'; return; } if(a.includes(0)){ $('calcNote').textContent='Parallel R = 0 Ohm (short branch)'; return; } $('calcNote').textContent='Parallel R = ' + fmt(1 / a.reduce((x,y)=>x + 1/y, 0)) + ' Ohm'; };
+
+if(!window.isSecureContext) setStatus('Note: Camera ke liye ye page https par kholna zaroori hai — file ke tor par kholne par camera block ho sakta hai.');
+</script>
+</body>
+</html>
